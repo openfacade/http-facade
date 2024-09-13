@@ -5,9 +5,9 @@
 ## Features
 
 - **Support for Multiple HTTP Engines**:
-    - `OkHttp`
-    - `AsyncHttpClient`
-    - `JDK HttpClient`
+  - `AsyncHttpClient`
+  - `JDK HttpClient`
+  - `OkHttp`
 
 ## Installation
 
