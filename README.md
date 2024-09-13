@@ -17,14 +17,14 @@ Add the following dependency to your `pom.xml` if you're using Maven:
 <dependency>
     <groupId>io.github.shoothzj</groupId>
     <artifactId>http-client-facade</artifactId>
-    <version>0.0.1</version>
+    <version>${http-client-facade.version}</version>
 </dependency>
 ```
 
 Or with Gradle:
 
 ```groovy
-implementation 'io.github.shoothzj:http-client-facade:0.0.1'
+implementation 'io.github.shoothzj:http-client-facade:$httpClientFacadeVersion'
 ```
 
 ## Getting Started
