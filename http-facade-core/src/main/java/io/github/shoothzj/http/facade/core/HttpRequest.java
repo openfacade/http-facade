@@ -1,5 +1,7 @@
 package io.github.shoothzj.http.facade.core;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.util.List;
 import java.util.Map;
 
@@ -8,13 +10,20 @@ public class HttpRequest {
     private final String url;
     private final HttpMethod method;
     private final Map<String, List<String>> headers;
-    private final byte[] body;
+    @Nullable
+    private byte[] body;
 
-    private HttpRequest(Builder builder) {
-        this.url = builder.url;
-        this.method = builder.method;
-        this.headers = builder.headers;
-        this.body = builder.body;
+    public HttpRequest(String url, HttpMethod method, Map<String, List<String>> headers) {
+        this.url = url;
+        this.method = method;
+        this.headers = headers;
+    }
+
+    public HttpRequest(String url, HttpMethod method, Map<String, List<String>> headers, @Nullable byte[] body) {
+        this.url = url;
+        this.method = method;
+        this.headers = headers;
+        this.body = body;
     }
 
     public String url() {
@@ -29,38 +38,8 @@ public class HttpRequest {
         return headers;
     }
 
-    public byte[] getBody() {
+    @Nullable
+    public byte[] body() {
         return body;
-    }
-
-    public static class Builder {
-        private String url;
-        private HttpMethod method = HttpMethod.GET; // Default to GET
-        private Map<String, List<String>> headers;
-        private byte[] body;
-
-        public Builder url(String url) {
-            this.url = url;
-            return this;
-        }
-
-        public Builder method(HttpMethod method) {
-            this.method = method;
-            return this;
-        }
-
-        public Builder headers(Map<String, List<String>> headers) {
-            this.headers = headers;
-            return this;
-        }
-
-        public Builder body(byte[] body) {
-            this.body = body;
-            return this;
-        }
-
-        public HttpRequest build() {
-            return new HttpRequest(this);
-        }
     }
 }

@@ -80,7 +80,7 @@ public class OkhttpClient extends BaseHttpClient {
     private Request buildOkHttpRequest(HttpRequest request) {
         Request.Builder builder = new Request.Builder()
                 .url(request.url())
-                .method(request.method().name(), request.getBody() != null ? RequestBody.create(request.getBody()) : null);
+                .method(request.method().name(), requestBody(request.body()));
 
         request.headers().forEach((name, values) -> {
             for (String value : values) {
@@ -98,6 +98,14 @@ public class OkhttpClient extends BaseHttpClient {
                 body,
                 response.headers().toMultimap()
         );
+    }
+
+    @Nullable
+    private static RequestBody requestBody(@Nullable byte[] body) {
+        if (body == null) {
+            return null;
+        }
+        return RequestBody.create(body);
     }
 
     @Nullable
