@@ -5,6 +5,7 @@
 .idea/**
 !.idea/icon.svg
 !.idea/vcs.xml
+**.iml
 
 # Project exclude paths
 **.log
