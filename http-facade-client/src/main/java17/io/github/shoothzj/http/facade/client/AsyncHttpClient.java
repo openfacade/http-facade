@@ -71,8 +71,8 @@ public class AsyncHttpClient extends BaseHttpClient {
                 .setMethod(request.method().name());
 
         request.headers().forEach(builder::addHeader);
-        if (request.getBody() != null) {
-            builder.setBody(request.getBody());
+        if (request.body() != null) {
+            builder.setBody(request.body());
         }
 
         return builder.build();
