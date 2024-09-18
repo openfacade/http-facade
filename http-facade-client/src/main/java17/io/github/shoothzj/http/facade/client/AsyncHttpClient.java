@@ -23,9 +23,13 @@ public class AsyncHttpClient extends BaseHttpClient {
     public AsyncHttpClient(HttpClientConfig config) {
         super(config);
         DefaultAsyncHttpClientConfig.Builder builder = Dsl.config();
-        builder.setConnectTimeout(config.connectTimeout())
-                .setReadTimeout(config.timeout())
-                .setRequestTimeout(config.timeout());
+        if (config.connectTimeout() != null) {
+            builder = builder.setConnectTimeout(config.connectTimeout());
+        }
+        if (config.timeout() != null) {
+            builder = builder.setReadTimeout(config.timeout())
+                    .setRequestTimeout(config.timeout());
+        }
         this.client = Dsl.asyncHttpClient(builder);
     }
 

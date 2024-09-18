@@ -24,10 +24,15 @@ public class OkhttpClient extends BaseHttpClient {
 
     public OkhttpClient(HttpClientConfig config) {
         super(config);
-        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder()
-                .connectTimeout(config.connectTimeout())
-                .readTimeout(config.timeout())
-                .writeTimeout(config.timeout());
+        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+
+        if (config.connectTimeout() != null) {
+            okHttpClientBuilder.connectTimeout(config.connectTimeout());
+        }
+        if (config.timeout() != null) {
+            okHttpClientBuilder.readTimeout(config.timeout())
+                    .writeTimeout(config.timeout());
+        }
 
         if (config.tlsConfig() != null) {
             TlsConfig tlsConfig = config.tlsConfig();

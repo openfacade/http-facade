@@ -2,6 +2,7 @@ package io.github.shoothzj.http.facade.core;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -12,6 +13,12 @@ public class HttpRequest {
     private final Map<String, List<String>> headers;
     @Nullable
     private byte[] body;
+
+    public HttpRequest(String url, HttpMethod method) {
+        this.url = url;
+        this.method = method;
+        this.headers = new HashMap<>();
+    }
 
     public HttpRequest(String url, HttpMethod method, Map<String, List<String>> headers) {
         this.url = url;

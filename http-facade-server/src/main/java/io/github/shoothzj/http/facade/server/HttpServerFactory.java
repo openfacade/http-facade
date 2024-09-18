@@ -8,11 +8,11 @@ public class HttpServerFactory {
             HttpServer server;
             switch (httpServerConfig.engine()) {
                 case Jetty:
-                    server = (HttpServer) Class.forName("io.github.shoothzj.http.facade.server.VertxHttpServer")
+                    server = (HttpServer) Class.forName("io.github.shoothzj.http.facade.server.JettyHttpServer")
                             .getDeclaredConstructor(HttpServerConfig.class).newInstance(httpServerConfig);
                     break;
                 default:
-                    server = (HttpServer) Class.forName("io.github.shoothzj.http.facade.server.JettyHttpServer")
+                    server = (HttpServer) Class.forName("io.github.shoothzj.http.facade.server.VertxHttpServer")
                             .getDeclaredConstructor(HttpServerConfig.class).newInstance(httpServerConfig);
                     break;
             }
