@@ -2,6 +2,7 @@ package io.github.shoothzj.http.facade.core;
 
 import org.jetbrains.annotations.Nullable;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -13,6 +14,12 @@ public class HttpResponse {
     private final byte[] body;
 
     private final Map<String, List<String>> headers;
+
+    public HttpResponse(int statusCode, @Nullable byte[] body) {
+        this.statusCode = statusCode;
+        this.body = body;
+        this.headers = new HashMap<>();
+    }
 
     public HttpResponse(int statusCode, @Nullable byte[] body, Map<String, List<String>> headers) {
         this.statusCode = statusCode;

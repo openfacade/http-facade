@@ -27,4 +27,11 @@ public interface HttpServer {
      * @param handler the request handler for this route.
      */
     void addRoute(String path, HttpMethod method, RequestHandler handler);
+
+    /**
+     * Get the port the server is listening on.
+     *
+     * @return the port number.
+     */
+    int listenPort();
 }

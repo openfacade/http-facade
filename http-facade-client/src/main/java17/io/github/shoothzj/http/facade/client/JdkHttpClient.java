@@ -12,9 +12,11 @@ public class JdkHttpClient extends BaseHttpClient {
     public JdkHttpClient(HttpClientConfig config) {
         super(config);
         java.net.http.HttpClient.Builder builder = java.net.http.HttpClient.newBuilder()
-                .connectTimeout(config.connectTimeout())
                 .version(java.net.http.HttpClient.Version.HTTP_1_1)
                 .followRedirects(java.net.http.HttpClient.Redirect.NORMAL);
+        if (config.connectTimeout() != null) {
+            builder = builder.connectTimeout(config.connectTimeout());
+        }
         if (config.tlsConfig() != null) {
             builder = builder.sslContext(JdkSslContextUtil.buildSSLContextFromJks(
                     config.tlsConfig().keyStorePath(),

@@ -11,6 +11,19 @@
 
     <artifactId>http-facade-examples</artifactId>
 
+    <dependencies>
+        <dependency>
+            <groupId>io.github.shoothzj</groupId>
+            <artifactId>http-facade-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.github.shoothzj</groupId>
+            <artifactId>http-facade-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+    </dependencies>
+
     <build>
         <plugins>
             <plugin>

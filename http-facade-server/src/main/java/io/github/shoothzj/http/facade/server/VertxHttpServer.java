@@ -23,15 +23,21 @@ public class VertxHttpServer extends BaseHttpServer {
     public VertxHttpServer(HttpServerConfig config) {
         super(config);
         this.vertx = Vertx.vertx();
+        this.vertxServer = vertx.createHttpServer();
     }
 
     @Override
     public CompletableFuture<Void> start() {
         return CompletableFuture.runAsync(() -> {
-            vertxServer = vertx.createHttpServer();
-            vertxServer.listen(config.port(), result -> {
+            final int listenPort;
+            if (config.port() == 0) {
+                listenPort = SocketUtil.findAvailablePort();
+            } else {
+                listenPort = config.port();
+            }
+            vertxServer.listen(listenPort, result -> {
                 if (result.succeeded()) {
-                    log.info("Vert.x HTTP server started on port {}", config.port());
+                    log.info("Vert.x HTTP server started on port {}", listenPort);
                 } else {
                     throw new RuntimeException("Failed to start Vert.x server: " + result.cause().getMessage());
                 }
@@ -62,6 +68,11 @@ public class VertxHttpServer extends BaseHttpServer {
                 );
             }
         });
+    }
+
+    @Override
+    public int listenPort() {
+        return vertxServer.actualPort();
     }
 
     private String vertxBody(@Nullable byte[] bytes) {
