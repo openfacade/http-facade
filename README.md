@@ -17,3 +17,12 @@ For more information on the HTTP client module, see the [README](http-facade-cli
 ## Server README
 
 For more information on the HTTP server module, see the [README](http-facade-server/README.md).
+
+## Unit Tests
+
+To run the tests, execute the following command:
+
+```bash
+mvn clean install -DskipTests
+mvn test -pl http-facade-tests
+```
