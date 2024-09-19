@@ -49,14 +49,14 @@
                         </configuration>
                     </execution>
                     <execution>
-                        <id>compile-java-17</id>
+                        <id>compile-java-11</id>
                         <goals>
                             <goal>compile</goal>
                         </goals>
                         <configuration>
-                            <release>17</release>
+                            <release>11</release>
                             <compileSourceRoots>
-                                <compileSourceRoot>${project.basedir}/src/main/java17</compileSourceRoot>
+                                <compileSourceRoot>${project.basedir}/src/main/java11</compileSourceRoot>
                             </compileSourceRoots>
                             <multiReleaseOutput>true</multiReleaseOutput>
                         </configuration>
