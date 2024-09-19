@@ -26,6 +26,7 @@ public class HttpBasicGetTest {
         List<HttpClientConfig> httpClientConfigs = List.of(
                 new HttpClientConfig.Builder().engine(HttpClientEngine.ASYNC_HTTP_CLIENT).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.JDK).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.JDK8).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.OKHTTP).build()
         );
 
