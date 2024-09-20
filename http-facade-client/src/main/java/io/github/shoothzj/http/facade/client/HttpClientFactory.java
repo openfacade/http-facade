@@ -9,7 +9,7 @@ public class HttpClientFactory {
                 : detectDefaultEngine();
 
         switch (engine) {
-            case ASYNC_HTTP_CLIENT:
+            case AsyncHttpClient:
                 client = new AsyncHttpClient(httpClientConfig);
                 break;
             case JDK:
@@ -18,7 +18,7 @@ public class HttpClientFactory {
             case JDK8:
                 client = new Jdk8HttpClient(httpClientConfig);
                 break;
-            case OKHTTP:
+            case OkHttp:
                 client = new OkhttpClient(httpClientConfig);
                 break;
             default:

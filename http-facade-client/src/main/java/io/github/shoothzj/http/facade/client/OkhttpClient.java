@@ -5,6 +5,7 @@ import io.github.shoothzj.http.facade.core.HttpResponse;
 import io.github.shoothzj.http.facade.core.TlsConfig;
 import okhttp3.Call;
 import okhttp3.Callback;
+import okhttp3.ConnectionPool;
 import okhttp3.ConnectionSpec;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -17,6 +18,7 @@ import org.jetbrains.annotations.Nullable;
 import java.io.IOException;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.TimeUnit;
 
 public class OkhttpClient extends BaseHttpClient {
 
@@ -32,6 +34,18 @@ public class OkhttpClient extends BaseHttpClient {
         if (config.timeout() != null) {
             okHttpClientBuilder.readTimeout(config.timeout())
                     .writeTimeout(config.timeout());
+        }
+
+        if (config.okHttpConfig() != null) {
+            okHttpClientBuilder.retryOnConnectionFailure(config.okHttpConfig().retryOnConnectionFailure());
+            HttpClientConfig.OkHttpConfig.ConnectionPoolConfig poolConfig = config.okHttpConfig().connectionPoolConfig();
+            if (poolConfig != null) {
+                int maxIdleConnections = poolConfig.maxIdleConnections();
+                long keepAliveNanos = poolConfig.keepAliveDuration().toNanos();
+                if (maxIdleConnections > 0 && keepAliveNanos > 0) {
+                    okHttpClientBuilder.connectionPool(new ConnectionPool(maxIdleConnections, keepAliveNanos, TimeUnit.NANOSECONDS));
+                }
+            }
         }
 
         if (config.tlsConfig() != null) {
