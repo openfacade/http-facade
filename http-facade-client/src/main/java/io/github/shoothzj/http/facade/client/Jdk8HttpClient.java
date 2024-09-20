@@ -4,7 +4,6 @@ import io.github.shoothzj.http.facade.core.HttpRequest;
 import io.github.shoothzj.http.facade.core.HttpResponse;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.time.Duration;
@@ -29,7 +28,6 @@ public class Jdk8HttpClient extends BaseHttpClient {
     @Override
     public HttpResponse sendSync(HttpRequest request) {
         HttpURLConnection connection = null;
-        InputStream inputStream = null;
         try {
             // Set up the connection
             URL url = new URL(request.url());
@@ -59,20 +57,12 @@ public class Jdk8HttpClient extends BaseHttpClient {
             }
 
             int statusCode = connection.getResponseCode();
-            inputStream = connection.getInputStream();
-            byte[] responseBody = inputStream.readAllBytes();
+            byte[] responseBody = connection.getInputStream().readAllBytes();
 
             return new HttpResponse(statusCode, responseBody, connection.getHeaderFields());
         } catch (IOException e) {
             throw new HttpClientException("HttpURLConnection request failed", e);
         } finally {
-            if (inputStream != null) {
-                try {
-                    inputStream.close();
-                } catch (IOException e) {
-                    // Ignore closing exceptions
-                }
-            }
             if (connection != null) {
                 connection.disconnect();
             }

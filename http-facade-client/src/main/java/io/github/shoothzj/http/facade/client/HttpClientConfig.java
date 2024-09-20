@@ -15,11 +15,14 @@ public class HttpClientConfig {
 
     private final TlsConfig tlsConfig;
 
+    private final OkHttpConfig okHttpConfig;
+
     private HttpClientConfig(Builder builder) {
         this.engine = builder.engine;
         this.timeout = builder.timeout;
         this.connectTimeout = builder.connectTimeout;
         this.tlsConfig = builder.tlsConfig;
+        this.okHttpConfig = builder.okHttpConfig;
     }
 
     public HttpClientEngine engine() {
@@ -38,6 +41,10 @@ public class HttpClientConfig {
         return tlsConfig;
     }
 
+    public OkHttpConfig okHttpConfig() {
+        return okHttpConfig;
+    }
+
     public static class Builder {
         private HttpClientEngine engine;
 
@@ -46,6 +53,8 @@ public class HttpClientConfig {
         private Duration connectTimeout;
 
         private TlsConfig tlsConfig;
+
+        private OkHttpConfig okHttpConfig;
 
         public Builder engine(HttpClientEngine engine) {
             this.engine = engine;
@@ -67,8 +76,43 @@ public class HttpClientConfig {
             return this;
         }
 
+        public Builder okHttpConfig(OkHttpConfig okHttpConfig) {
+            this.okHttpConfig = okHttpConfig;
+            return this;
+        }
+
         public HttpClientConfig build() {
             return new HttpClientConfig(this);
+        }
+    }
+
+    @Setter
+    public static class OkHttpConfig {
+        private boolean retryOnConnectionFailure;
+
+        private ConnectionPoolConfig connectionPoolConfig;
+
+        @Setter
+        public static class ConnectionPoolConfig {
+            private int maxIdleConnections;
+
+            private Duration keepAliveDuration;
+
+            public int maxIdleConnections() {
+                return maxIdleConnections;
+            }
+
+            public Duration keepAliveDuration() {
+                return keepAliveDuration;
+            }
+        }
+
+        public boolean retryOnConnectionFailure() {
+            return retryOnConnectionFailure;
+        }
+
+        public ConnectionPoolConfig connectionPoolConfig() {
+            return connectionPoolConfig;
         }
     }
 }
