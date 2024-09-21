@@ -2,9 +2,12 @@ package io.github.shoothzj.http.facade.server;
 
 import io.github.shoothzj.http.facade.core.HttpMethod;
 import io.github.shoothzj.http.facade.core.HttpRequest;
+import io.github.shoothzj.http.facade.core.TlsConfig;
 import io.vertx.core.Vertx;
+import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
+import io.vertx.core.net.JksOptions;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
@@ -23,7 +26,20 @@ public class VertxHttpServer extends BaseHttpServer {
     public VertxHttpServer(HttpServerConfig config) {
         super(config);
         this.vertx = Vertx.vertx();
-        this.vertxServer = vertx.createHttpServer();
+        HttpServerOptions options = new HttpServerOptions();
+        if (config.tlsConfig() != null) {
+            TlsConfig tlsConfig = config.tlsConfig();
+            options.setSsl(true)
+                    .setKeyCertOptions(new JksOptions()
+                            .setPath(tlsConfig.keyStorePath())
+                            .setPassword(String.valueOf(tlsConfig.keyStorePassword())));
+            if (tlsConfig.trustStorePath() != null) {
+                options.setTrustOptions(new JksOptions()
+                        .setPath(tlsConfig.trustStorePath())
+                        .setPassword(String.valueOf(tlsConfig.trustStorePassword())));
+            }
+        }
+        this.vertxServer = vertx.createHttpServer(options);
     }
 
     @Override
