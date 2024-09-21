@@ -69,4 +69,18 @@ public class HttpServerConfig {
             return new HttpServerConfig(this);
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("HttpServerConfig{\n");
+        sb.append("engine=").append(engine).append("\n");
+        sb.append("host=").append(host).append("\n");
+        sb.append("port=").append(port).append("\n");
+        if (tlsConfig != null) {
+            sb.append("tlsConfig=").append(tlsConfig).append("\n");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
 }

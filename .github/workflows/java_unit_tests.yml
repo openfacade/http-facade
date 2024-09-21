@@ -18,4 +18,4 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: unit tests
-        run: mvn clean install -DskipTests; mvn test -pl http-facade-tests
+        run: mvn -B clean install -DskipTests; mvn -B test -pl http-facade-tests

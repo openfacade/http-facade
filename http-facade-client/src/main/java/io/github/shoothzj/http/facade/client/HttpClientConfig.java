@@ -115,4 +115,25 @@ public class HttpClientConfig {
             return connectionPoolConfig;
         }
     }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("HttpClientConfig{\n");
+        sb.append("engine=").append(engine).append("\n");
+        if (timeout != null) {
+            sb.append("timeout=").append(timeout).append("\n");
+        }
+        if (connectTimeout != null) {
+            sb.append("connectTimeout=").append(connectTimeout).append("\n");
+        }
+        if (tlsConfig != null) {
+            sb.append("tlsConfig=").append(tlsConfig).append("\n");
+        }
+        if (okHttpConfig != null) {
+            sb.append("okHttpConfig=").append(okHttpConfig).append("\n");
+        }
+        sb.append("}");
+        return sb.toString();
+    }
 }

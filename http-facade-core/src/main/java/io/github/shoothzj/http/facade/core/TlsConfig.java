@@ -54,4 +54,9 @@ public class TlsConfig {
     public String[] cipherSuites() {
         return cipherSuites;
     }
+
+    @Override
+    public String toString() {
+        return "TlsConfig{\n" + "verifyDisabled=" + verifyDisabled + "\n" + "hostnameVerifyDisabled=" + hostnameVerifyDisabled + "\n" + "}";
+    }
 }
