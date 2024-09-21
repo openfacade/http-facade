@@ -2,6 +2,7 @@ package io.github.shoothzj.http.facade.tests;
 
 import io.github.shoothzj.http.facade.client.HttpClient;
 import io.github.shoothzj.http.facade.client.HttpClientConfig;
+import io.github.shoothzj.http.facade.client.HttpClientEngine;
 import io.github.shoothzj.http.facade.client.HttpClientFactory;
 import io.github.shoothzj.http.facade.core.HttpMethod;
 import io.github.shoothzj.http.facade.core.HttpRequest;
@@ -14,10 +15,20 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.nio.charset.StandardCharsets;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-public class HttpBasicGetTest extends BaseTest {
+public class HttpBasicPatchTest extends BaseTest {
+    @Override
+    protected List<HttpClientConfig> clientConfigList() {
+        return List.of(
+                new HttpClientConfig.Builder().engine(HttpClientEngine.AsyncHttpClient).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.JDK).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.OkHttp).build()
+        );
+    }
 
     @ParameterizedTest
     @MethodSource("clientServerConfigProvider")
@@ -26,7 +37,7 @@ public class HttpBasicGetTest extends BaseTest {
         HttpClient client = HttpClientFactory.createHttpClient(clientConfig);
         HttpServer server = HttpServerFactory.createHttpServer(serverConfig);
 
-        HttpMethod method = HttpMethod.GET;
+        HttpMethod method = HttpMethod.PATCH;
         server.addRoute("/hello", method, request -> {
             HttpResponse response = new HttpResponse(200, String.format("%s method called!", method).getBytes());
             return CompletableFuture.completedFuture(response);
@@ -37,6 +48,9 @@ public class HttpBasicGetTest extends BaseTest {
         String url = String.format("http://localhost:%d/hello", server.listenPort());
 
         HttpRequest request = new HttpRequest(url, method);
+        if (clientConfig.engine().equals(HttpClientEngine.OkHttp)) {
+            request.setBody("".getBytes(StandardCharsets.UTF_8));
+        }
         log.info("sending {} request to url: {}", method, url);
         HttpResponse response = client.sendSync(request);
 

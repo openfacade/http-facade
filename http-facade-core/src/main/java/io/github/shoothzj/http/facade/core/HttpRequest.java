@@ -1,11 +1,13 @@
 package io.github.shoothzj.http.facade.core;
 
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+@Setter
 public class HttpRequest {
 
     private final String url;
