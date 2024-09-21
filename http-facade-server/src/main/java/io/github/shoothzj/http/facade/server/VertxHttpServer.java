@@ -48,21 +48,20 @@ public class VertxHttpServer extends BaseHttpServer {
 
     @Override
     public CompletableFuture<Void> start() {
-        return CompletableFuture.runAsync(() -> {
-            final int listenPort;
-            if (config.port() == 0) {
-                listenPort = SocketUtil.findAvailablePort();
+        CompletableFuture<Void> future = new CompletableFuture<>();
+
+        int listenPort = (config.port() == 0) ? SocketUtil.findAvailablePort() : config.port();
+
+        vertxServer.requestHandler(router).listen(listenPort, result -> {
+            if (result.succeeded()) {
+                log.info("Vert.x HTTP server started on port {}", listenPort);
+                future.complete(null);
             } else {
-                listenPort = config.port();
+                future.completeExceptionally(new RuntimeException("Failed to start Vert.x server: " + result.cause().getMessage()));
             }
-            vertxServer.requestHandler(router).listen(listenPort, result -> {
-                if (result.succeeded()) {
-                    log.info("Vert.x HTTP server started on port {}", listenPort);
-                } else {
-                    throw new RuntimeException("Failed to start Vert.x server: " + result.cause().getMessage());
-                }
-            });
         });
+
+        return future;
     }
 
     @Override
