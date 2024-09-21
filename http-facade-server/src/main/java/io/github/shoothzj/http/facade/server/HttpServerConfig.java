@@ -5,13 +5,13 @@ import lombok.Setter;
 
 @Setter
 public class HttpServerConfig {
-    private final HttpServerEngine engine;
+    private HttpServerEngine engine;
 
-    private final String host;
+    private String host;
 
-    private final int port;
+    private int port;
 
-    private final TlsConfig tlsConfig;
+    private TlsConfig tlsConfig;
 
     private HttpServerConfig(Builder builder) {
         this.engine = builder.engine;

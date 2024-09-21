@@ -7,15 +7,15 @@ import java.time.Duration;
 
 @Setter
 public class HttpClientConfig {
-    private final HttpClientEngine engine;
+    private HttpClientEngine engine;
 
-    private final Duration timeout;
+    private Duration timeout;
 
-    private final Duration connectTimeout;
+    private Duration connectTimeout;
 
-    private final TlsConfig tlsConfig;
+    private TlsConfig tlsConfig;
 
-    private final OkHttpConfig okHttpConfig;
+    private OkHttpConfig okHttpConfig;
 
     private HttpClientConfig(Builder builder) {
         this.engine = builder.engine;
