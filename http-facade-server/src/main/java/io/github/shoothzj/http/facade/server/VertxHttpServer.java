@@ -8,6 +8,7 @@ import io.vertx.core.http.HttpServerOptions;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
 import io.vertx.core.net.JksOptions;
+import io.vertx.ext.web.Router;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
 
@@ -20,6 +21,8 @@ import java.util.stream.Collectors;
 @Slf4j
 public class VertxHttpServer extends BaseHttpServer {
     private final Vertx vertx;
+
+    private final Router router;
 
     private io.vertx.core.http.HttpServer vertxServer;
 
@@ -39,7 +42,8 @@ public class VertxHttpServer extends BaseHttpServer {
                         .setPassword(String.valueOf(tlsConfig.trustStorePassword())));
             }
         }
-        this.vertxServer = vertx.createHttpServer(options);
+        this.router = Router.router(vertx);
+        this.vertxServer = vertx.createHttpServer();
     }
 
     @Override
@@ -51,7 +55,7 @@ public class VertxHttpServer extends BaseHttpServer {
             } else {
                 listenPort = config.port();
             }
-            vertxServer.listen(listenPort, result -> {
+            vertxServer.requestHandler(router).listen(listenPort, result -> {
                 if (result.succeeded()) {
                     log.info("Vert.x HTTP server started on port {}", listenPort);
                 } else {
@@ -73,16 +77,15 @@ public class VertxHttpServer extends BaseHttpServer {
 
     @Override
     public void addRoute(String path, HttpMethod method, RequestHandler handler) {
-        vertxServer.requestHandler(req -> {
-            if (req.method().name().equalsIgnoreCase(method.name()) && req.path().equals(path)) {
-                convertToHttpRequest(req).thenCompose(httpRequest ->
-                        handler.handle(httpRequest).thenAccept(response -> {
-                            HttpServerResponse vertxResponse = req.response();
-                            vertxResponse.setStatusCode(response.statusCode());
-                            vertxResponse.end(vertxBody(response.body()));
-                        })
-                );
-            }
+        router.route(vertxHttpMethod(method), path).handler(ctx -> {
+            HttpServerRequest req = ctx.request();
+            convertToHttpRequest(req).thenCompose(httpRequest ->
+                    handler.handle(httpRequest).thenAccept(response -> {
+                        HttpServerResponse vertxResponse = req.response();
+                        vertxResponse.setStatusCode(response.statusCode());
+                        vertxResponse.end(vertxBody(response.body()));
+                    })
+            );
         });
     }
 
@@ -93,7 +96,7 @@ public class VertxHttpServer extends BaseHttpServer {
 
     private String vertxBody(@Nullable byte[] bytes) {
         if (bytes == null) {
-            return null;
+            return "";
         }
         return new String(bytes, StandardCharsets.UTF_8);
     }
@@ -123,5 +126,26 @@ public class VertxHttpServer extends BaseHttpServer {
         }).exceptionHandler(futureRequest::completeExceptionally);
 
         return futureRequest;
+    }
+
+    private static io.vertx.core.http.HttpMethod vertxHttpMethod(HttpMethod method) {
+        switch (method) {
+            case GET:
+                return io.vertx.core.http.HttpMethod.GET;
+            case POST:
+                return io.vertx.core.http.HttpMethod.POST;
+            case PUT:
+                return io.vertx.core.http.HttpMethod.PUT;
+            case DELETE:
+                return io.vertx.core.http.HttpMethod.DELETE;
+            case PATCH:
+                return io.vertx.core.http.HttpMethod.PATCH;
+            case HEAD:
+                return io.vertx.core.http.HttpMethod.HEAD;
+            case OPTIONS:
+                return io.vertx.core.http.HttpMethod.OPTIONS;
+            default:
+                throw new IllegalArgumentException("Unsupported HTTP method: " + method);
+        }
     }
 }
