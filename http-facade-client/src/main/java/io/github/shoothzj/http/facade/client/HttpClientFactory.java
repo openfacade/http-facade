@@ -1,5 +1,7 @@
 package io.github.shoothzj.http.facade.client;
 
+import java.time.Duration;
+
 public class HttpClientFactory {
     public static HttpClient createHttpClient(HttpClientConfig httpClientConfig) {
         HttpClient client;
@@ -7,6 +9,14 @@ public class HttpClientFactory {
         HttpClientEngine engine = httpClientConfig.engine() != null
                 ? httpClientConfig.engine()
                 : detectDefaultEngine();
+
+        if (httpClientConfig.connectTimeout() == null) {
+            httpClientConfig.setConnectTimeout(Duration.ofSeconds(10));
+        }
+
+        if (httpClientConfig.timeout() == null) {
+            httpClientConfig.setTimeout(Duration.ofSeconds(30));
+        }
 
         switch (engine) {
             case AsyncHttpClient:
