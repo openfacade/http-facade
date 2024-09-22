@@ -22,20 +22,12 @@ import java.util.concurrent.CompletableFuture;
 public class HttpTlsTest extends BaseTest{
     private static final char[] JKS_PASSWORD = "changeit".toCharArray();
 
-    private static final String ABSOLUTE_RESOURCE_PATH =
-            HttpTlsTest.class.getProtectionDomain().getCodeSource().getLocation().getPath();
-
-    static {
-        System.out.println("=====");
-        System.out.println("path is " + ABSOLUTE_RESOURCE_PATH);
-    }
-
     public static String keyJksPath() {
-        return ABSOLUTE_RESOURCE_PATH + "/jks/testkeystore.jks";
+        return HttpTlsTest.class.getClassLoader().getResource("jks/testkeystore.jks").getPath();
     }
 
-    public static String trustJskPath() {
-        return ABSOLUTE_RESOURCE_PATH + "/jks/testkeystore.jks";
+    public static String trustJksPath() {
+        return HttpTlsTest.class.getClassLoader().getResource("jks/testkeystore.jks").getPath();
     }
 
     @Override
@@ -53,8 +45,10 @@ public class HttpTlsTest extends BaseTest{
     protected List<HttpServerConfig> serverConfigList() {
         TlsConfig tlsConfig = new TlsConfig.Builder()
                 .keyStore(keyJksPath(), JKS_PASSWORD)
-                .trustStore(trustJskPath(), JKS_PASSWORD)
+                .trustStore(trustJksPath(), JKS_PASSWORD)
                 .build();
+        System.out.println("===="+keyJksPath());
+        System.out.println("===="+ trustJksPath());
         return List.of(
                 new HttpServerConfig.Builder().engine(HttpServerEngine.Vertx).tlsConfig(tlsConfig).build()
         );
