@@ -35,7 +35,10 @@ public class HttpTlsTest extends BaseTest{
 
     @Override
     protected List<HttpClientConfig> clientConfigList() {
-        TlsConfig tlsConfig = new TlsConfig.Builder().build();
+        TlsConfig tlsConfig = new TlsConfig.Builder()
+                .keyStore(keyJksPath(), JKS_PASSWORD)
+                .trustStore(trustJksPath(), JKS_PASSWORD)
+                .build();
         return List.of(
                 new HttpClientConfig.Builder().engine(HttpClientEngine.AsyncHttpClient).tlsConfig(tlsConfig).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.JDK).tlsConfig(tlsConfig).build(),
@@ -50,26 +53,6 @@ public class HttpTlsTest extends BaseTest{
                 .keyStore(keyJksPath(), JKS_PASSWORD)
                 .trustStore(trustJksPath(), JKS_PASSWORD)
                 .build();
-        // list /home/runner/work/http-facade/http-facade/http-facade-tests/target/test-classes/jks/testkeystore.jks path files
-        {
-            File dir = new File("/home/runner/work/http-facade/http-facade/http-facade-tests/target/test-classes/jks/");
-
-            if (dir.isDirectory()) {
-                String[] files = dir.list();
-                if (files != null) {
-                    for (String file : files) {
-                        System.out.println("====");
-                        System.out.println(file);
-                    }
-                }
-            } else {
-                System.out.println("The specified path is not a directory.");
-            }
-        }
-
-
-        System.out.println("===="+keyJksPath());
-        System.out.println("===="+ trustJksPath());
         return List.of(
                 new HttpServerConfig.Builder().engine(HttpServerEngine.Vertx).tlsConfig(tlsConfig).build()
         );

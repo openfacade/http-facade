@@ -41,12 +41,20 @@ public class TlsConfig {
         return keyStorePath;
     }
 
+    public byte[] keyStoreContent() {
+        return keyStoreContent;
+    }
+
     public char[] keyStorePassword() {
         return keyStorePassword;
     }
 
     public String trustStorePath() {
         return trustStorePath;
+    }
+
+    public byte[] trustStoreContent() {
+        return trustStoreContent;
     }
 
     public char[] trustStorePassword() {
@@ -67,14 +75,6 @@ public class TlsConfig {
 
     public String[] cipherSuites() {
         return cipherSuites;
-    }
-
-    public byte[] keyStoreContent() {
-        return keyStoreContent;
-    }
-
-    public byte[] trustStoreContent() {
-        return trustStoreContent;
     }
 
     public static class Builder {
