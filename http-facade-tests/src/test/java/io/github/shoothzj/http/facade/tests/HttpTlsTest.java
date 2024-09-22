@@ -15,6 +15,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.File;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -47,6 +50,24 @@ public class HttpTlsTest extends BaseTest{
                 .keyStore(keyJksPath(), JKS_PASSWORD)
                 .trustStore(trustJksPath(), JKS_PASSWORD)
                 .build();
+        // list /home/runner/work/http-facade/http-facade/http-facade-tests/target/test-classes/jks/testkeystore.jks path files
+        {
+            File dir = new File("/home/runner/work/http-facade/http-facade/http-facade-tests/target/test-classes/jks/");
+
+            if (dir.isDirectory()) {
+                String[] files = dir.list();
+                if (files != null) {
+                    for (String file : files) {
+                        System.out.println("====");
+                        System.out.println(file);
+                    }
+                }
+            } else {
+                System.out.println("The specified path is not a directory.");
+            }
+        }
+
+
         System.out.println("===="+keyJksPath());
         System.out.println("===="+ trustJksPath());
         return List.of(
