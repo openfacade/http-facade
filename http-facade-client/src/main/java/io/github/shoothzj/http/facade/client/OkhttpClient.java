@@ -52,8 +52,15 @@ public class OkhttpClient extends BaseHttpClient {
             TlsConfig tlsConfig = config.tlsConfig();
 
             // set tls version and cipher suits
-            ConnectionSpec connectionSpec = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS).tlsVersions(
-                    tlsConfig.versions()).cipherSuites(tlsConfig.cipherSuites()).build();
+            ConnectionSpec.Builder connectionSpecBuilder = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS);
+            if (tlsConfig.versions() != null) {
+                connectionSpecBuilder.tlsVersions(tlsConfig.versions());
+            }
+            if (tlsConfig.cipherSuites() != null) {
+                connectionSpecBuilder.cipherSuites(tlsConfig.cipherSuites());
+            }
+            ConnectionSpec connectionSpec = connectionSpecBuilder.build();
+
             okHttpClientBuilder.connectionSpecs(Collections.singletonList(connectionSpec));
 
             // create ssl context from keystore and truststore
