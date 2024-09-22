@@ -22,12 +22,20 @@ import java.util.concurrent.CompletableFuture;
 public class HttpTlsTest extends BaseTest{
     private static final char[] JKS_PASSWORD = "changeit".toCharArray();
 
+    private static final String ABSOLUTE_RESOURCE_PATH =
+            HttpTlsTest.class.getProtectionDomain().getCodeSource().getLocation().getPath();
+
+    static {
+        System.out.println("=====");
+        System.out.println("path is " + ABSOLUTE_RESOURCE_PATH);
+    }
+
     public static String keyJksPath() {
-        return HttpTlsTest.class.getClassLoader().getResourceAsStream("jks/testkeystore.jks").toString();
+        return ABSOLUTE_RESOURCE_PATH + "/jks/testkeystore.jks";
     }
 
     public static String trustJskPath() {
-        return HttpTlsTest.class.getClassLoader().getResourceAsStream("jks/testkeystore.jks").toString();
+        return ABSOLUTE_RESOURCE_PATH + "/jks/testkeystore.jks";
     }
 
     @Override
