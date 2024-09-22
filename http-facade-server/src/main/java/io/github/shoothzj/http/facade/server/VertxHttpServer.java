@@ -43,7 +43,7 @@ public class VertxHttpServer extends BaseHttpServer {
             }
         }
         this.router = Router.router(vertx);
-        this.vertxServer = vertx.createHttpServer();
+        this.vertxServer = vertx.createHttpServer(options);
     }
 
     @Override
