@@ -9,10 +9,12 @@ import java.util.Map;
 
 @Setter
 public class HttpRequest {
-
     private final String url;
+
     private final HttpMethod method;
+
     private final Map<String, List<String>> headers;
+
     @Nullable
     private byte[] body;
 
@@ -26,6 +28,13 @@ public class HttpRequest {
         this.url = url;
         this.method = method;
         this.headers = headers;
+    }
+
+    public HttpRequest(String url, HttpMethod method, @Nullable byte[] body) {
+        this.url = url;
+        this.method = method;
+        this.headers = new HashMap<>();
+        this.body = body;
     }
 
     public HttpRequest(String url, HttpMethod method, Map<String, List<String>> headers, @Nullable byte[] body) {
