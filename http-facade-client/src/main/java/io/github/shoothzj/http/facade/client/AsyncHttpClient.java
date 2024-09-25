@@ -12,7 +12,7 @@ public class AsyncHttpClient extends BaseHttpClient {
     }
 
     @Override
-    public CompletableFuture<HttpResponse> send(HttpRequest request) throws HttpClientException {
+    protected CompletableFuture<HttpResponse> innerSend(HttpRequest request) throws HttpClientException {
         throw new UnsupportedOperationException("jdk11 is required for AsyncHttpClient");
     }
 }

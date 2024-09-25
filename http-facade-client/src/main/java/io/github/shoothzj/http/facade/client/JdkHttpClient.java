@@ -12,7 +12,7 @@ public class JdkHttpClient extends BaseHttpClient{
     }
 
     @Override
-    public CompletableFuture<HttpResponse> send(HttpRequest request) {
+    protected CompletableFuture<HttpResponse> innerSend(HttpRequest request) {
         throw new UnsupportedOperationException("jdk17 is required for JdkHttpClient");
     }
 }

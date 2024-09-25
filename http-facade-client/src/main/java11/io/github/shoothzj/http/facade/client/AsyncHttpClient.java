@@ -34,7 +34,7 @@ public class AsyncHttpClient extends BaseHttpClient {
     }
 
     @Override
-    public CompletableFuture<HttpResponse> send(HttpRequest request) throws HttpClientException {
+    protected CompletableFuture<HttpResponse> innerSend(HttpRequest request) throws HttpClientException {
         Request asyncRequest = buildAsyncRequest(request);
         CompletableFuture<HttpResponse> future = new CompletableFuture<>();
 

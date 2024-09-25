@@ -29,7 +29,7 @@ public class JdkHttpClient extends BaseHttpClient {
     }
 
     @Override
-    public CompletableFuture<HttpResponse> send(HttpRequest request) throws HttpClientException {
+    protected CompletableFuture<HttpResponse> innerSend(HttpRequest request) throws HttpClientException {
         java.net.http.HttpRequest jdkRequest = buildJdkHttpRequest(request);
 
         return client.sendAsync(jdkRequest, java.net.http.HttpResponse.BodyHandlers.ofByteArray())

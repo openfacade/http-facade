@@ -15,6 +15,12 @@ public class HttpResponse {
 
     private final Map<String, List<String>> headers;
 
+    public HttpResponse(int statusCode) {
+        this.statusCode = statusCode;
+        this.body = null;
+        this.headers = new HashMap<>();
+    }
+
     public HttpResponse(int statusCode, @Nullable byte[] body) {
         this.statusCode = statusCode;
         this.body = body;

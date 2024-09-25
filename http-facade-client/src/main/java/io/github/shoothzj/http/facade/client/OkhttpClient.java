@@ -78,7 +78,7 @@ public class OkhttpClient extends BaseHttpClient {
     }
 
     @Override
-    public CompletableFuture<HttpResponse> send(HttpRequest request) throws HttpClientException {
+    protected CompletableFuture<HttpResponse> innerSend(HttpRequest request) throws HttpClientException {
         Request okHttpRequest = buildOkHttpRequest(request);
         CompletableFuture<HttpResponse> future = new CompletableFuture<>();
 
