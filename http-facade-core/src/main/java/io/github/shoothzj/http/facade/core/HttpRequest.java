@@ -28,6 +28,13 @@ public class HttpRequest {
         this.headers = headers;
     }
 
+    public HttpRequest(String url, HttpMethod method, @Nullable byte[] body) {
+        this.url = url;
+        this.method = method;
+        this.headers = new HashMap<>();
+        this.body = body;
+    }
+
     public HttpRequest(String url, HttpMethod method, Map<String, List<String>> headers, @Nullable byte[] body) {
         this.url = url;
         this.method = method;

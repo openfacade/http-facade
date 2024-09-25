@@ -29,32 +29,64 @@ public interface HttpClient extends Closeable {
      */
     HttpResponse sendSync(HttpRequest request);
 
+    default CompletableFuture<HttpResponse> post(String url, byte[] body) {
+        return send(new HttpRequest(url, HttpMethod.POST, body));
+    }
+
     default CompletableFuture<HttpResponse> post(String url, byte[] body, Map<String, List<String>> headers) {
         return send(new HttpRequest(url, HttpMethod.POST, headers, body));
+    }
+
+    default CompletableFuture<HttpResponse> put(String url, byte[] body) {
+        return send(new HttpRequest(url, HttpMethod.PUT, body));
     }
 
     default CompletableFuture<HttpResponse> put(String url, byte[] body, Map<String, List<String>> headers) {
         return send(new HttpRequest(url, HttpMethod.PUT, headers, body));
     }
 
+    default CompletableFuture<HttpResponse> delete(String url) {
+        return send(new HttpRequest(url, HttpMethod.DELETE));
+    }
+
     default CompletableFuture<HttpResponse> delete(String url, Map<String, List<String>> headers) {
         return send(new HttpRequest(url, HttpMethod.DELETE, headers));
+    }
+
+    default CompletableFuture<HttpResponse> get(String url) {
+        return send(new HttpRequest(url, HttpMethod.GET));
     }
 
     default CompletableFuture<HttpResponse> get(String url, Map<String, List<String>> headers) {
         return send(new HttpRequest(url, HttpMethod.GET, headers));
     }
 
+    default @NotNull HttpResponse postSync(String url, byte[] body) {
+        return sendSync(new HttpRequest(url, HttpMethod.POST, body));
+    }
+
     default @NotNull HttpResponse postSync(String url, byte[] body, Map<String, List<String>> headers) {
         return sendSync(new HttpRequest(url, HttpMethod.POST, headers, body));
+    }
+
+    default @NotNull HttpResponse putSync(String url, byte[] body) {
+        return sendSync(new HttpRequest(url, HttpMethod.PUT, body));
     }
 
     default @NotNull HttpResponse putSync(String url, byte[] body, Map<String, List<String>> headers) {
         return sendSync(new HttpRequest(url, HttpMethod.PUT, headers, body));
     }
 
+    default @NotNull HttpResponse deleteSync(String url) {
+        return sendSync(new HttpRequest(url, HttpMethod.DELETE));
+    }
+
     default @NotNull HttpResponse deleteSync(String url, Map<String, List<String>> headers) {
         return sendSync(new HttpRequest(url, HttpMethod.DELETE, headers));
+    }
+
+    default @NotNull HttpResponse getSync(String url) {
+        return sendSync(new HttpRequest(url, HttpMethod.GET));
     }
 
     default @NotNull HttpResponse getSync(String url, Map<String, List<String>> headers) {
