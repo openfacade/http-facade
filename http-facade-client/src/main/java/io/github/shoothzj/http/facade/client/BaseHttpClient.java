@@ -9,13 +9,28 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.TimeoutException;
 
 abstract class BaseHttpClient implements HttpClient {
+    protected final HttpClientConfig config;
+
     private Duration timeout = Duration.ofSeconds(30);
 
     public BaseHttpClient(HttpClientConfig config) {
-        if (config.timeout() != null) {
-            this.timeout = config.timeout();
+        this.config = config;
+        if (this.config.timeout() != null) {
+            this.timeout = this.config.timeout();
         }
     }
+
+    @Override
+    public CompletableFuture<HttpResponse> send(HttpRequest request) {
+        if (config.requestFilters() != null) {
+            for (RequestFilter requestFilter : config.requestFilters()) {
+                request = requestFilter.filter(request);
+            }
+        }
+        return innerSend(request);
+    }
+
+    protected abstract CompletableFuture<HttpResponse> innerSend(HttpRequest request);
 
     /**
      * Send a request synchronously with the configured timeout.

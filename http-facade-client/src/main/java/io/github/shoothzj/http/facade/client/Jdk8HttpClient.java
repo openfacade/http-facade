@@ -21,12 +21,17 @@ public class Jdk8HttpClient extends BaseHttpClient {
     }
 
     @Override
-    public CompletableFuture<HttpResponse> send(HttpRequest request) {
+    protected CompletableFuture<HttpResponse> innerSend(HttpRequest request) {
         return CompletableFuture.supplyAsync(() -> sendSync(request));
     }
 
     @Override
     public HttpResponse sendSync(HttpRequest request) {
+        if (config.requestFilters() != null ) {
+            for (RequestFilter requestFilter : config.requestFilters()) {
+                request = requestFilter.filter(request);
+            }
+        }
         HttpURLConnection connection = null;
         try {
             // Set up the connection
