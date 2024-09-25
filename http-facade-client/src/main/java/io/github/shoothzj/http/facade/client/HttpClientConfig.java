@@ -4,6 +4,8 @@ import io.github.shoothzj.http.facade.core.TlsConfig;
 import lombok.Setter;
 
 import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
 
 @Setter
 public class HttpClientConfig {
@@ -13,6 +15,8 @@ public class HttpClientConfig {
 
     private Duration connectTimeout;
 
+    private List<RequestFilter> requestFilters;
+
     private TlsConfig tlsConfig;
 
     private OkHttpConfig okHttpConfig;
@@ -21,6 +25,7 @@ public class HttpClientConfig {
         this.engine = builder.engine;
         this.timeout = builder.timeout;
         this.connectTimeout = builder.connectTimeout;
+        this.requestFilters = builder.requestFilters;
         this.tlsConfig = builder.tlsConfig;
         this.okHttpConfig = builder.okHttpConfig;
     }
@@ -35,6 +40,10 @@ public class HttpClientConfig {
 
     public Duration connectTimeout() {
         return connectTimeout;
+    }
+
+    public List<RequestFilter> requestFilters() {
+        return requestFilters;
     }
 
     public TlsConfig tlsConfig() {
@@ -52,6 +61,8 @@ public class HttpClientConfig {
 
         private Duration connectTimeout;
 
+        private List<RequestFilter> requestFilters = new ArrayList<>();
+
         private TlsConfig tlsConfig;
 
         private OkHttpConfig okHttpConfig;
@@ -68,6 +79,11 @@ public class HttpClientConfig {
 
         public Builder connectTimeout(Duration connectTimeout) {
             this.connectTimeout = connectTimeout;
+            return this;
+        }
+
+        public Builder addRequestFilter(RequestFilter filter) {
+            this.requestFilters.add(filter);
             return this;
         }
 
