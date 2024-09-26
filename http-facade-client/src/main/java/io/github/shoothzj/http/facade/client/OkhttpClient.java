@@ -104,9 +104,10 @@ public class OkhttpClient extends BaseHttpClient {
     }
 
     private Request buildOkHttpRequest(HttpRequest request) {
+        byte[] body = request.body();
         Request.Builder builder = new Request.Builder()
                 .url(request.url())
-                .method(request.method().name(), requestBody(request.body()));
+                .method(request.method().name(), RequestBody.create(body));
 
         request.headers().forEach((name, values) -> {
             for (String value : values) {
@@ -126,20 +127,11 @@ public class OkhttpClient extends BaseHttpClient {
         );
     }
 
-    @Nullable
-    private static RequestBody requestBody(@Nullable byte[] body) {
-        if (body == null) {
-            return null;
-        }
-        return RequestBody.create(body);
-    }
-
-    @Nullable
+    @NotNull
     private static byte[] getBody(@Nullable ResponseBody responseBody) throws IOException {
-        byte[] body = null;
         if (responseBody != null) {
-            body = responseBody.bytes();
+            return responseBody.bytes();
         }
-        return body;
+        return new byte[0];
     }
 }
