@@ -4,15 +4,12 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>io.github.shoothzj</groupId>
+    <groupId>io.github.openfacade</groupId>
     <artifactId>http-facade-parent</artifactId>
-    <version>0.0.4</version>
+    <version>0.1.0</version>
     <packaging>pom</packaging>
     <modules>
-        <module>http-facade-client</module>
-        <module>http-facade-core</module>
-        <module>http-facade-examples</module>
-        <module>http-facade-server</module>
+        <module>http-facade</module>
         <module>http-facade-tests</module>
     </modules>
 
@@ -226,7 +223,7 @@
 
     <name>Http Client Facade</name>
     <description>Http client abstracts multiple underlying HTTP clients, such as Jdk and OkHttp, and provides a unified API</description>
-    <url>https://github.com/shoothzj/http-client-facade</url>
+    <url>https://github.com/openfacade/http-facade</url>
     <licenses>
         <license>
             <name>Apache License, Version 2.0</name>
@@ -235,8 +232,8 @@
     </licenses>
 
     <organization>
-        <name>shoothzj</name>
-        <url>https://github.com/shoothzj</url>
+        <name>openfacade</name>
+        <url>https://github.com/openfacade</url>
     </organization>
 
     <developers>
@@ -247,9 +244,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git@github.com:shoothzj/http-client-facade.git</connection>
-        <developerConnection>scm:git:git@github.com:shoothzj/http-client-facade.git</developerConnection>
-        <url>git@github.com:shoothzj/http-client-facade.git</url>
+        <connection>scm:git:git@github.com:openfacade/http-facade.git</connection>
+        <developerConnection>scm:git:git@github.com:openfacade/http-facade.git</developerConnection>
+        <url>git@github.com:openfacade/http-facade.git</url>
         <tag>HEAD</tag>
     </scm>
 
