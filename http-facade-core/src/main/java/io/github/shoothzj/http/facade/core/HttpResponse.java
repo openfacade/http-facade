@@ -1,7 +1,8 @@
 package io.github.shoothzj.http.facade.core;
 
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,24 +11,25 @@ public class HttpResponse {
 
     private final int statusCode;
 
-    @Nullable
+    @NotNull
     private final byte[] body;
 
+    @NotNull
     private final Map<String, List<String>> headers;
 
     public HttpResponse(int statusCode) {
         this.statusCode = statusCode;
-        this.body = null;
+        this.body = new byte[0];
         this.headers = new HashMap<>();
     }
 
-    public HttpResponse(int statusCode, @Nullable byte[] body) {
+    public HttpResponse(int statusCode, @NotNull byte[] body) {
         this.statusCode = statusCode;
         this.body = body;
         this.headers = new HashMap<>();
     }
 
-    public HttpResponse(int statusCode, @Nullable byte[] body, Map<String, List<String>> headers) {
+    public HttpResponse(int statusCode, @NotNull byte[] body, @NotNull Map<String, List<String>> headers) {
         this.statusCode = statusCode;
         this.body = body;
         this.headers = headers;
@@ -37,11 +39,17 @@ public class HttpResponse {
         return statusCode;
     }
 
-    @Nullable
+    @NotNull
     public byte[] body() {
         return body;
     }
 
+    @NotNull
+    public String bodyAsString() {
+        return new String(body, StandardCharsets.UTF_8);
+    }
+
+    @NotNull
     public Map<String, List<String>> headers() {
         return headers;
     }

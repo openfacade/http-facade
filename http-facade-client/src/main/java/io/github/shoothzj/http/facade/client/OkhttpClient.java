@@ -134,12 +134,11 @@ public class OkhttpClient extends BaseHttpClient {
         return RequestBody.create(body);
     }
 
-    @Nullable
+    @NotNull
     private static byte[] getBody(@Nullable ResponseBody responseBody) throws IOException {
-        byte[] body = null;
         if (responseBody != null) {
-            body = responseBody.bytes();
+            return responseBody.bytes();
         }
-        return body;
+        return new byte[0];
     }
 }

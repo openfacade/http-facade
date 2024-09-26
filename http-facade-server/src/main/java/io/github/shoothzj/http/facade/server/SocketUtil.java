@@ -7,7 +7,7 @@ import java.net.ServerSocket;
 public class SocketUtil {
     /**
      * typical used in unit test, so exception is not big deal
-     * @return
+     * @return available port
      */
     public static int findAvailablePort() {
         try (ServerSocket serverSocket = new ServerSocket(0)) {
