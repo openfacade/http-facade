@@ -2,6 +2,8 @@ package io.github.shoothzj.http.facade.client;
 
 import io.github.shoothzj.http.facade.core.TlsConfig;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -9,16 +11,22 @@ import java.util.List;
 
 @Setter
 public class HttpClientConfig {
+    @Nullable
     private HttpClientEngine engine;
 
+    @Nullable
     private Duration timeout;
 
+    @Nullable
     private Duration connectTimeout;
 
+    @NotNull
     private List<RequestFilter> requestFilters;
 
+    @Nullable
     private TlsConfig tlsConfig;
 
+    @Nullable
     private OkHttpConfig okHttpConfig;
 
     private HttpClientConfig(Builder builder) {
@@ -30,26 +38,38 @@ public class HttpClientConfig {
         this.okHttpConfig = builder.okHttpConfig;
     }
 
+    @Nullable
     public HttpClientEngine engine() {
         return engine;
     }
 
+    @Nullable
     public Duration timeout() {
         return timeout;
     }
 
+    @Nullable
     public Duration connectTimeout() {
         return connectTimeout;
     }
 
+    @NotNull
     public List<RequestFilter> requestFilters() {
         return requestFilters;
     }
 
+    @NotNull
+    public List<RequestFilter> addRequestFilter(RequestFilter filter) {
+        this.requestFilters.add(filter);
+        return this.requestFilters;
+    }
+
+    @Nullable
     public TlsConfig tlsConfig() {
         return tlsConfig;
     }
 
+    @Nullable
     public OkHttpConfig okHttpConfig() {
         return okHttpConfig;
     }
@@ -79,6 +99,11 @@ public class HttpClientConfig {
 
         public Builder connectTimeout(Duration connectTimeout) {
             this.connectTimeout = connectTimeout;
+            return this;
+        }
+
+        public Builder requestFilter(List<RequestFilter> requestFilters) {
+            this.requestFilters = requestFilters;
             return this;
         }
 
