@@ -2,6 +2,7 @@ package io.github.shoothzj.http.facade.client;
 
 import io.github.shoothzj.http.facade.core.TlsConfig;
 import lombok.Setter;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.util.ArrayList;
@@ -42,6 +43,13 @@ public class HttpClientConfig {
         return connectTimeout;
     }
 
+    @NotNull
+    public List<RequestFilter> addRequestFilter(RequestFilter filter) {
+        this.requestFilters.add(filter);
+        return this.requestFilters;
+    }
+
+    @NotNull
     public List<RequestFilter> requestFilters() {
         return requestFilters;
     }
@@ -79,6 +87,11 @@ public class HttpClientConfig {
 
         public Builder connectTimeout(Duration connectTimeout) {
             this.connectTimeout = connectTimeout;
+            return this;
+        }
+
+        public Builder requestFilter(List<RequestFilter> requestFilters) {
+            this.requestFilters = requestFilters;
             return this;
         }
 
