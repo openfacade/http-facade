@@ -22,10 +22,8 @@ abstract class BaseHttpClient implements HttpClient {
 
     @Override
     public CompletableFuture<HttpResponse> send(HttpRequest request) {
-        if (config.requestFilters() != null) {
-            for (RequestFilter requestFilter : config.requestFilters()) {
-                request = requestFilter.filter(request);
-            }
+        for (RequestFilter requestFilter : config.requestFilters()) {
+            request = requestFilter.filter(request);
         }
         return innerSend(request);
     }
