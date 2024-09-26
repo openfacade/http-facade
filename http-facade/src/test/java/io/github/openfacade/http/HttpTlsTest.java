@@ -27,8 +27,8 @@ public class HttpTlsTest extends BaseTest{
                 .build();
         return List.of(
                 new HttpClientConfig.Builder().engine(HttpClientEngine.AsyncHttpClient).tlsConfig(tlsConfig).build(),
-                new HttpClientConfig.Builder().engine(HttpClientEngine.JDK).tlsConfig(tlsConfig).build(),
-                new HttpClientConfig.Builder().engine(HttpClientEngine.JDK8).tlsConfig(tlsConfig).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.JAVA).tlsConfig(tlsConfig).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.JAVA8).tlsConfig(tlsConfig).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.OkHttp).tlsConfig(tlsConfig).build()
         );
     }

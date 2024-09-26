@@ -22,14 +22,14 @@ public class HttpClientFactory {
             case AsyncHttpClient:
                 client = new AsyncHttpClient(httpClientConfig);
                 break;
-            case JDK:
-                client = new JdkHttpClient(httpClientConfig);
+            case JAVA:
+                client = new JavaHttpClient(httpClientConfig);
                 break;
-            case JDK8:
-                client = new Jdk8HttpClient(httpClientConfig);
+            case JAVA8:
+                client = new Java8HttpClient(httpClientConfig);
                 break;
             case OkHttp:
-                client = new OkhttpClient(httpClientConfig);
+                client = new OkHttpClient(httpClientConfig);
                 break;
             default:
                 throw new IllegalStateException("Unsupported HttpClient engine: " + httpClientConfig.engine());
@@ -48,10 +48,10 @@ public class HttpClientFactory {
         try {
             // Attempt to load java.net.HttpClient
             Class.forName("java.net.http.HttpClient");
-            return HttpClientEngine.JDK;
+            return HttpClientEngine.JAVA;
         } catch (ClassNotFoundException e) {
             // If java.net.HttpClient is not available (Java 8), fall back to HttpURLConnection
-            return HttpClientEngine.JDK8;
+            return HttpClientEngine.JAVA8;
         }
     }
 }

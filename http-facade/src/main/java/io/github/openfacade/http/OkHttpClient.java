@@ -4,7 +4,6 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.ConnectionPool;
 import okhttp3.ConnectionSpec;
-import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -17,13 +16,13 @@ import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
 
-public class OkhttpClient extends BaseHttpClient {
+public class OkHttpClient extends BaseHttpClient {
 
-    private final OkHttpClient client;
+    private final okhttp3.OkHttpClient client;
 
-    public OkhttpClient(HttpClientConfig config) {
+    public OkHttpClient(HttpClientConfig config) {
         super(config);
-        OkHttpClient.Builder okHttpClientBuilder = new OkHttpClient.Builder();
+        okhttp3.OkHttpClient.Builder okHttpClientBuilder = new okhttp3.OkHttpClient.Builder();
 
         if (config.connectTimeout() != null) {
             okHttpClientBuilder.connectTimeout(config.connectTimeout());

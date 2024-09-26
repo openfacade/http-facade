@@ -6,12 +6,12 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.concurrent.CompletableFuture;
 
-public class Jdk8HttpClient extends BaseHttpClient {
+public class Java8HttpClient extends BaseHttpClient {
     private final Duration connectTimeout;
 
     private final Duration timeout;
 
-    public Jdk8HttpClient(HttpClientConfig config) {
+    public Java8HttpClient(HttpClientConfig config) {
         super(config);
         this.connectTimeout = config.connectTimeout();
         this.timeout = config.timeout();

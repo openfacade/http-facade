@@ -3,10 +3,10 @@ package io.github.openfacade.http;
 import java.net.URI;
 import java.util.concurrent.CompletableFuture;
 
-public class JdkHttpClient extends BaseHttpClient {
+public class JavaHttpClient extends BaseHttpClient {
     private final java.net.http.HttpClient client;
 
-    public JdkHttpClient(HttpClientConfig config) {
+    public JavaHttpClient(HttpClientConfig config) {
         super(config);
         java.net.http.HttpClient.Builder builder = java.net.http.HttpClient.newBuilder()
                 .version(java.net.http.HttpClient.Version.HTTP_1_1)

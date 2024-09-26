@@ -6,11 +6,10 @@
 
     <groupId>io.github.openfacade</groupId>
     <artifactId>http-facade-parent</artifactId>
-    <version>0.0.4</version>
+    <version>0.1.0</version>
     <packaging>pom</packaging>
     <modules>
         <module>http-facade</module>
-        <module>http-facade-bom</module>
     </modules>
 
     <properties>
@@ -233,7 +232,7 @@
 
     <organization>
         <name>shoothzj</name>
-        <url>https://github.com/shoothzj</url>
+        <url>https://github.com/openfacade</url>
     </organization>
 
     <developers>
