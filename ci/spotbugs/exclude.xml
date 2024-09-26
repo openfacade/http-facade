@@ -17,12 +17,12 @@
 
     <Match>
         <Bug pattern="CT_CONSTRUCTOR_THROW"/>
-        <Class name="io.github.shoothzj.http.facade.client.JdkHttpClient"/>
+        <Class name="io.github.openfacade.http.JdkHttpClient"/>
     </Match>
 
     <Match>
         <Bug pattern="CT_CONSTRUCTOR_THROW"/>
-        <Class name="io.github.shoothzj.http.facade.client.AsyncHttpClient"/>
+        <Class name="io.github.openfacade.http.AsyncHttpClient"/>
     </Match>
 
 </FindBugsFilter>
