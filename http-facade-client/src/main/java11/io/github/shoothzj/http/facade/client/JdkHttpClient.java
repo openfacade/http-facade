@@ -39,6 +39,7 @@ public class JdkHttpClient extends BaseHttpClient {
     private java.net.http.HttpRequest buildJdkHttpRequest(HttpRequest request) {
         java.net.http.HttpRequest.Builder builder = java.net.http.HttpRequest.newBuilder()
                 .uri(URI.create(request.url()))
+                .timeout(config.timeout())
                 .method(request.method().name(), request.body() != null ? java.net.http.HttpRequest.BodyPublishers.ofByteArray(request.body()) : java.net.http.HttpRequest.BodyPublishers.noBody());
 
         request.headers().forEach((name, values) -> {
