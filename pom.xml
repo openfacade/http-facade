@@ -42,7 +42,7 @@
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
         <spotbugs-maven-plugin.version>4.8.6.3</spotbugs-maven-plugin.version>
-        <spotless-maven-plugi.version>2.43.0</spotless-maven-plugi.version>
+        <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
     </properties>
 
     <dependencies>
@@ -144,7 +144,7 @@
             <plugin>
                 <groupId>com.diffplug.spotless</groupId>
                 <artifactId>spotless-maven-plugin</artifactId>
-                <version>${spotless-maven-plugi.version}</version>
+                <version>${spotless-maven-plugin.version}</version>
                 <configuration>
                     <java>
                         <importOrder>
