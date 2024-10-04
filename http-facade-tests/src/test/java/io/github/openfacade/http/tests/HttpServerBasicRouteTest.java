@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-public class HttpBasicOptionsTest extends BaseTest {
+public class HttpServerBasicRouteTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("clientServerConfigProvider")
     void testHttpClientServerCombinations(HttpClientConfig clientConfig, HttpServerConfig serverConfig) throws Exception {
@@ -25,28 +25,26 @@ public class HttpBasicOptionsTest extends BaseTest {
         HttpClient client = HttpClientFactory.createHttpClient(clientConfig);
         HttpServer server = HttpServerFactory.createHttpServer(serverConfig);
 
-        HttpMethod method = HttpMethod.OPTIONS;
-        server.addRoute("/hello", method, request -> {
-            HttpResponse response;
-            if (method.equals(HttpMethod.HEAD)) {
-                response = new HttpResponse(200, null);
-            } else {
-                response = new HttpResponse(200, String.format("%s method called!", method).getBytes());
-            }
+        server.addRoute("/route1", HttpMethod.GET, request -> {
+            HttpResponse response = new HttpResponse(200, "route1".getBytes());
+            return CompletableFuture.completedFuture(response);
+        });
+        server.addRoute("/route2", HttpMethod.GET, request -> {
+            HttpResponse response = new HttpResponse(200, "route2".getBytes());
             return CompletableFuture.completedFuture(response);
         });
 
         server.start().join();
 
-        String url = String.format("http://localhost:%d/hello", server.listenPort());
+        String prefix = String.format("http://localhost:%d", server.listenPort());
 
-        HttpRequest request = new HttpRequest(url, method);
-        log.info("sending {} request to url: {}", method, url);
-        HttpResponse response = client.sendSync(request);
+        HttpResponse route1Resp = client.sendSync(new HttpRequest(prefix + "/route1", HttpMethod.GET));
+        Assertions.assertEquals(200, route1Resp.statusCode());
+        Assertions.assertArrayEquals("route1".getBytes(), route1Resp.body());
 
-        Assertions.assertEquals(200, response.statusCode());
-        Assertions.assertNotNull(response.body());
-        Assertions.assertEquals(String.format("%s method called!", method), new String(response.body()));
+        HttpResponse route2Resp = client.sendSync(new HttpRequest(prefix + "/route2", HttpMethod.GET));
+        Assertions.assertEquals(200, route2Resp.statusCode());
+        Assertions.assertArrayEquals("route2".getBytes(), route2Resp.body());
 
         client.close();
         server.stop().join();

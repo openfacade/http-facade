@@ -19,7 +19,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-public class HttpBasicPutTest extends BaseTest {
+public class HttpClientPutTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("clientServerConfigProvider")
     void testHttpClientServerCombinations(HttpClientConfig clientConfig, HttpServerConfig serverConfig) throws Exception {
@@ -29,12 +29,7 @@ public class HttpBasicPutTest extends BaseTest {
 
         HttpMethod method = HttpMethod.PUT;
         server.addRoute("/hello", method, request -> {
-            HttpResponse response;
-            if (method.equals(HttpMethod.HEAD)) {
-                response = new HttpResponse(200, null);
-            } else {
-                response = new HttpResponse(200, String.format("%s method called!", method).getBytes());
-            }
+            HttpResponse response = new HttpResponse(200, String.format("%s method called!", method).getBytes());
             return CompletableFuture.completedFuture(response);
         });
 

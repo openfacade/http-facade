@@ -17,7 +17,7 @@ import org.junit.jupiter.params.provider.MethodSource;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-public class HttpBasicHeadTest extends BaseTest {
+public class HttpClientHeadTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("clientServerConfigProvider")
     void testHttpClientServerCombinations(HttpClientConfig clientConfig, HttpServerConfig serverConfig) throws Exception {
@@ -27,7 +27,7 @@ public class HttpBasicHeadTest extends BaseTest {
 
         HttpMethod method = HttpMethod.HEAD;
         server.addRoute("/hello", method, request -> {
-            HttpResponse response = new HttpResponse(200, null);
+            HttpResponse response = new HttpResponse(200, new byte[0]);
             return CompletableFuture.completedFuture(response);
         });
 
