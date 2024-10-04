@@ -1,6 +1,9 @@
 package io.github.openfacade.http.tests;
 
-import io.github.openfacade.http.*;
+import io.github.openfacade.http.HttpClient;
+import io.github.openfacade.http.HttpClientConfig;
+import io.github.openfacade.http.HttpClientEngine;
+import io.github.openfacade.http.HttpClientFactory;
 import io.github.openfacade.http.HttpMethod;
 import io.github.openfacade.http.HttpRequest;
 import io.github.openfacade.http.HttpResponse;
@@ -12,30 +15,20 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
+import java.nio.charset.StandardCharsets;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-public class HttpBasicAuthFilterTest extends BaseTest {
+public class HttpClientPostTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("clientServerConfigProvider")
     void testHttpClientServerCombinations(HttpClientConfig clientConfig, HttpServerConfig serverConfig) throws Exception {
-        ArrayList<RequestFilter> requestFilters = new ArrayList<>();
-        requestFilters.add(new BasicAuthRequestFilter("username", "password"));
-        clientConfig.setRequestFilters(requestFilters);
         log.info("client engine {}, server engine {}", clientConfig.engine(), serverConfig.engine());
         HttpClient client = HttpClientFactory.createHttpClient(clientConfig);
         HttpServer server = HttpServerFactory.createHttpServer(serverConfig);
 
-        HttpMethod method = HttpMethod.GET;
+        HttpMethod method = HttpMethod.POST;
         server.addRoute("/hello", method, request -> {
-            Map<String, List<String>> headers = request.headers();
-            List<String> authorization = headers.get("Authorization");
-            if (authorization == null || !"Basic dXNlcm5hbWU6cGFzc3dvcmQ=".equals(authorization.get(0))) {
-                return CompletableFuture.completedFuture(new HttpResponse(401, null));
-            }
             HttpResponse response = new HttpResponse(200, String.format("%s method called!", method).getBytes());
             return CompletableFuture.completedFuture(response);
         });
@@ -45,6 +38,9 @@ public class HttpBasicAuthFilterTest extends BaseTest {
         String url = String.format("http://localhost:%d/hello", server.listenPort());
 
         HttpRequest request = new HttpRequest(url, method);
+        if (clientConfig.engine().equals(HttpClientEngine.OkHttp)) {
+            request.setBody("".getBytes(StandardCharsets.UTF_8));
+        }
         log.info("sending {} request to url: {}", method, url);
         HttpResponse response = client.sendSync(request);
 
