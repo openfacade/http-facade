@@ -2,6 +2,7 @@ package io.github.openfacade.http;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 abstract class BaseHttpServer implements HttpServer {
@@ -18,6 +19,11 @@ abstract class BaseHttpServer implements HttpServer {
         Route route = toRoute(path, method, handler);
         routes.computeIfAbsent(method, k -> new HashMap<>()).put(path, route);
         this.addRoute(route);
+    }
+
+    @Override
+    public void addSyncRoute(String path, HttpMethod method, SyncRequestHandler handler) {
+        addRoute(path, method, request -> CompletableFuture.completedFuture(handler.handle(request)));
     }
 
     protected abstract void addRoute(Route route);

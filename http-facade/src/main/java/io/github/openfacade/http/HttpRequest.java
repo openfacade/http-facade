@@ -99,6 +99,28 @@ public class HttpRequest {
     }
 
     public Map<String, List<String>> queryParams() {
+        if (queryParams == null) {
+            queryParams = new HashMap<>();
+        }
         return queryParams;
+    }
+
+    public void addQueryParam(@NotNull String key, @NotNull String value) {
+        if (queryParams == null) {
+            queryParams = new HashMap<>();
+        }
+        queryParams.putIfAbsent(key, new ArrayList<>());
+        queryParams.get(key).add(value);
+    }
+
+    public void addQueryParam(@NotNull String key, @NotNull List<String> value) {
+        if (queryParams == null) {
+            queryParams = new HashMap<>();
+        }
+        if (queryParams.get(key) == null) {
+            queryParams.put(key, value);
+        } else {
+            queryParams.get(key).addAll(value);
+        }
     }
 }

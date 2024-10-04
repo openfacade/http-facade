@@ -1,8 +1,5 @@
 package io.github.openfacade.http;
 
-import jakarta.servlet.http.HttpServlet;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
@@ -10,13 +7,10 @@ import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
 import org.eclipse.jetty.util.ssl.SslContextFactory;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-public class JettyHttpServer extends BaseHttpServer {
+public class JettyHttpServer extends ServletHttpServer {
     private final Server server;
 
     private final ServerConnector serverConnector;
@@ -53,10 +47,6 @@ public class JettyHttpServer extends BaseHttpServer {
     }
 
     @Override
-    protected void addRoute(Route route) {
-    }
-
-    @Override
     public CompletableFuture<Void> start() {
         return CompletableFuture.runAsync(() -> {
             try {
@@ -84,65 +74,5 @@ public class JettyHttpServer extends BaseHttpServer {
     @Override
     public int listenPort() {
         return serverConnector.getLocalPort();
-    }
-
-    private class RequestHandlerServlet extends HttpServlet {
-        @Override
-        protected void service(HttpServletRequest req, HttpServletResponse resp) {
-            try {
-                String url = req.getRequestURI();
-
-                HttpMethod method = null;
-                for (HttpMethod httpMethod : JettyHttpServer.this.routes.keySet()) {
-                    if (httpMethod.name().equals(req.getMethod())) {
-                        method = httpMethod;
-                        break;
-                    }
-                }
-                if (method == null) {
-                    resp.setStatus(405);
-                    return;
-                }
-                Map<String, Route> routeMap = JettyHttpServer.this.routes.get(method);
-
-                Route matchedRoute = null;
-                for (Route route : routeMap.values()) {
-                    if (route.pattern.matcher(url).matches()) {
-                        matchedRoute = route;
-                        break;
-                    }
-                }
-
-                if (matchedRoute == null) {
-                    resp.setStatus(404);
-                    return;
-                }
-
-                byte[] body = null;
-                if (HttpMethod.POST.equals(method) || HttpMethod.PUT.equals(method) || HttpMethod.PATCH.equals(method)) {
-                    body = req.getInputStream().readAllBytes();
-                }
-                HttpRequest httpRequest = new HttpRequest(url, method, body);
-
-                Map<String, String> pathVariables = PathUtil.extractPathVariableNames(matchedRoute.pattern, matchedRoute.pathVariableNames, url);
-                httpRequest.setPathVariables(pathVariables);
-
-                req.getHeaderNames().asIterator().forEachRemaining(headerName -> {
-                    String headerValue = req.getHeader(headerName);
-                    httpRequest.addHeader(headerName, headerValue);
-                });
-
-                matchedRoute.handler.handle(httpRequest).thenAccept(httpResponse -> {
-                    try {
-                        resp.setStatus(httpResponse.statusCode());
-                        resp.getWriter().write(new String(httpResponse.body(), StandardCharsets.UTF_8));
-                    } catch (IOException e) {
-                        log.error("Error writing response", e);
-                    }
-                });
-            } catch (Exception e) {
-                log.error("Error handling request", e);
-            }
-        }
     }
 }
