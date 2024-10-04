@@ -14,16 +14,16 @@ import java.util.stream.Stream;
 public abstract class BaseTest {
     protected List<HttpClientConfig> clientConfigList() {
         return List.of(
-//                new HttpClientConfig.Builder().engine(HttpClientEngine.AsyncHttpClient).build(),
-//                new HttpClientConfig.Builder().engine(HttpClientEngine.JAVA).build(),
-//                new HttpClientConfig.Builder().engine(HttpClientEngine.JAVA8).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.AsyncHttpClient).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.JAVA).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.JAVA8).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.OkHttp).build()
         );
     }
 
     protected List<HttpServerConfig> serverConfigList() {
         return List.of(
-                new HttpServerConfig.Builder().engine(HttpServerEngine.Vertx).build()
+                new HttpServerConfig.Builder().host("127.0.0.1").engine(HttpServerEngine.Vertx).build()
         );
     }
 

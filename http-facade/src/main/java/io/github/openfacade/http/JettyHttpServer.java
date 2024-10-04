@@ -40,7 +40,7 @@ public class JettyHttpServer extends BaseHttpServer {
     }
 
     @Override
-    public void addRoute(String path, HttpMethod method, RequestHandler handler) {
+    protected void addRoute(Route route) {
     }
 
     @Override
