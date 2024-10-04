@@ -72,15 +72,31 @@ public class VertxHttpServer extends BaseHttpServer {
     }
 
     @Override
-    public void addRoute(String path, HttpMethod method, RequestHandler handler) {
-        router.route(vertxHttpMethod(method), path).handler(ctx -> {
+    protected void addRoute(Route route) {
+        router.route(vertxHttpMethod(route.method), PathUtil.toVertxPath(route.path)).handler(ctx -> {
             HttpServerRequest req = ctx.request();
-            convertToHttpRequest(req).thenCompose(httpRequest ->
-                    handler.handle(httpRequest).thenAccept(response -> {
-                        HttpServerResponse vertxResponse = req.response();
-                        vertxResponse.setStatusCode(response.statusCode());
-                        vertxResponse.end(vertxBody(response.body()));
-                    })
+            convertToHttpRequest(req).thenCompose(httpRequest -> {
+                        try {
+                            httpRequest.setPathVariables(PathUtil.extractPathVariableNames(route.pattern, route.pathVariableNames, httpRequest.url()));
+                            Map<String, List<String>> params = req.params().entries().stream()
+                                    .collect(Collectors.groupingBy(
+                                            Map.Entry::getKey,
+                                            Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+                                    ));
+                            httpRequest.setQueryParams(params);
+                            return route.handler.handle(httpRequest).thenAccept(response -> {
+                                HttpServerResponse vertxResponse = req.response();
+                                vertxResponse.setStatusCode(response.statusCode());
+                                vertxResponse.end(vertxBody(response.body()));
+                            });
+                        } catch (Exception e) {
+                            log.error("Error while handling request", e);
+                            HttpServerResponse vertxResponse = req.response();
+                            vertxResponse.setStatusCode(500);
+                            vertxResponse.end();
+                            return CompletableFuture.completedFuture(null);
+                        }
+                    }
             );
         });
     }

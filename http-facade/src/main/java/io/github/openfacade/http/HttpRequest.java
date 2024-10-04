@@ -22,6 +22,16 @@ public class HttpRequest {
     @Nullable
     private byte[] body;
 
+    /**
+     * for server side, the path variables are extracted from the url
+     */
+    private Map<String, String> pathVariables;
+
+    /**
+     * for server side, the query parameters are extracted from the url
+     */
+    private Map<String, List<String>> queryParams;
+
     public HttpRequest(@NotNull String url, @NotNull HttpMethod method) {
         this.url = url;
         this.method = method;
@@ -68,5 +78,13 @@ public class HttpRequest {
     @Nullable
     public byte[] body() {
         return body;
+    }
+
+    public Map<String, String> pathVariables() {
+        return pathVariables;
+    }
+
+    public Map<String, List<String>> queryParams() {
+        return queryParams;
     }
 }
