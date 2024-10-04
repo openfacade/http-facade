@@ -14,10 +14,9 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
 
-import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-public class HttpServerBasicRouteTest extends BaseTest {
+public class HttpServerBasicSyncRouteTest extends BaseTest {
     @ParameterizedTest
     @MethodSource("clientServerConfigProvider")
     void testHttpClientServerCombinations(HttpClientConfig clientConfig, HttpServerConfig serverConfig) throws Exception {
@@ -25,14 +24,8 @@ public class HttpServerBasicRouteTest extends BaseTest {
         HttpClient client = HttpClientFactory.createHttpClient(clientConfig);
         HttpServer server = HttpServerFactory.createHttpServer(serverConfig);
 
-        server.addRoute("/route1", HttpMethod.GET, request -> {
-            HttpResponse response = new HttpResponse(200, "route1".getBytes());
-            return CompletableFuture.completedFuture(response);
-        });
-        server.addRoute("/route2", HttpMethod.GET, request -> {
-            HttpResponse response = new HttpResponse(200, "route2".getBytes());
-            return CompletableFuture.completedFuture(response);
-        });
+        server.addSyncRoute("/route1", HttpMethod.GET, request -> new HttpResponse(200, "route1".getBytes()));
+        server.addSyncRoute("/route2", HttpMethod.GET, request -> new HttpResponse(200, "route2".getBytes()));
 
         server.start().join();
 

@@ -7,6 +7,9 @@ public class HttpServerFactory {
             case Jetty:
                 server = new JettyHttpServer(httpServerConfig);
                 break;
+            case Tomcat:
+                server = new TomcatHttpServer(httpServerConfig);
+                break;
             case Vertx:
                 server = new VertxHttpServer(httpServerConfig);
                 break;

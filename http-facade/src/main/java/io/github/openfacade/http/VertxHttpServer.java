@@ -77,7 +77,7 @@ public class VertxHttpServer extends BaseHttpServer {
             HttpServerRequest req = ctx.request();
             convertToHttpRequest(req).thenCompose(httpRequest -> {
                         try {
-                            httpRequest.setPathVariables(PathUtil.extractPathVariableNames(route.pattern, route.pathVariableNames, httpRequest.url()));
+                            httpRequest.setPathVariables(route.pathVariables(httpRequest.url()));
                             Map<String, List<String>> params = req.params().entries().stream()
                                     .collect(Collectors.groupingBy(
                                             Map.Entry::getKey,

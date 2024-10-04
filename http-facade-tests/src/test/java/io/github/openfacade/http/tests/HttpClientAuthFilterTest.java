@@ -33,8 +33,12 @@ public class HttpClientAuthFilterTest extends BaseTest {
         server.addRoute("/hello", method, request -> {
             Map<String, List<String>> headers = request.headers();
             List<String> authorization = headers.get("Authorization");
+            if (authorization == null) {
+                // tomcat will convert the header name to lower case
+                authorization = headers.get("authorization");
+            }
             if (authorization == null || !"Basic dXNlcm5hbWU6cGFzc3dvcmQ=".equals(authorization.get(0))) {
-                return CompletableFuture.completedFuture(new HttpResponse(401, null));
+                return CompletableFuture.completedFuture(new HttpResponse(401, new byte[0]));
             }
             HttpResponse response = new HttpResponse(200, String.format("%s method called!", method).getBytes());
             return CompletableFuture.completedFuture(response);

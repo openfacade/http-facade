@@ -2,6 +2,7 @@ package io.github.openfacade.http;
 
 import lombok.AllArgsConstructor;
 
+import java.util.Map;
 import java.util.regex.Pattern;
 
 @AllArgsConstructor
@@ -15,4 +16,8 @@ public class Route {
     final String[] pathVariableNames;
 
     final RequestHandler handler;
+
+    public Map<String, String> pathVariables(String url) {
+        return PathUtil.extractPathVariableNames(this.pattern, this.pathVariableNames, url);
+    }
 }
