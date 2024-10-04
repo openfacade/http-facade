@@ -23,6 +23,7 @@ public abstract class BaseTest {
 
     protected List<HttpServerConfig> serverConfigList() {
         return List.of(
+                new HttpServerConfig.Builder().host("127.0.0.1").engine(HttpServerEngine.Jetty).build(),
                 new HttpServerConfig.Builder().host("127.0.0.1").engine(HttpServerEngine.Vertx).build()
         );
     }

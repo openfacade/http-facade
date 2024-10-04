@@ -4,6 +4,7 @@ import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -73,6 +74,19 @@ public class HttpRequest {
     @NotNull
     public Map<String, List<String>> headers() {
         return headers;
+    }
+
+    public void addHeader(@NotNull String key, @NotNull String value) {
+        headers.putIfAbsent(key, new ArrayList<>());
+        headers.get(key).add(value);
+    }
+
+    public void addHeader(@NotNull String key, @NotNull List<String> value) {
+        if (headers.get(key) == null) {
+            headers.put(key, value);
+        } else {
+            headers.get(key).addAll(value);
+        }
     }
 
     @Nullable

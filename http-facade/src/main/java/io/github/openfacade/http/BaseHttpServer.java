@@ -7,7 +7,7 @@ import java.util.regex.Pattern;
 abstract class BaseHttpServer implements HttpServer {
     protected HttpServerConfig config;
 
-    private final Map<HttpMethod, Map<String, Route>> routes = new HashMap<>();
+    protected final Map<HttpMethod, Map<String, Route>> routes = new HashMap<>();
 
     public BaseHttpServer(HttpServerConfig config) {
         this.config = config;
