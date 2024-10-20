@@ -16,7 +16,11 @@
 
 ### Installation
 
-Add the following dependency to your `pom.xml` if you're using Maven:
+By default, the `HttpClientFacade` uses the built-in HTTP engine provided by the JDK. It automatically selects the appropriate implementation based on the Java version, supporting both Java 8 and Java 11+. However, if you wish to use a specific HTTP engine like `OkHttp` or `AsyncHttpClient`, you'll need to add the corresponding dependencies.
+
+#### Maven
+
+Add the following dependency to your `pom.xml` to include the default `http-facade`:
 
 ```xml
 <dependency>
@@ -26,11 +30,61 @@ Add the following dependency to your `pom.xml` if you're using Maven:
 </dependency>
 ```
 
-Or with Gradle:
+If you'd like to use a specific HTTP engine, you can include the following additional dependencies:
+
+- **AsyncHttpClient**:
+
+  ```xml
+  <dependency>
+      <groupId>io.github.openfacade</groupId>
+      <artifactId>http-facade</artifactId>
+      <version>${http-facade.version}</version>
+  </dependency>
+  <dependency>
+      <groupId>org.asynchttpclient</groupId>
+      <artifactId>async-http-client</artifactId>
+      <version>${asynchttp.version}</version>
+  </dependency>
+  ```
+
+- **OkHttp**:
+
+  ```xml
+  <dependency>
+      <groupId>io.github.openfacade</groupId>
+      <artifactId>http-facade</artifactId>
+      <version>${http-facade.version}</version>
+  </dependency>
+  <dependency>
+      <groupId>com.squareup.okhttp3</groupId>
+      <artifactId>okhttp</artifactId>
+    <version>${okhttp.version}</version>
+  </dependency>
+  ```
+
+#### Gradle
+
+For Gradle users, add the default `http-facade` dependency:
 
 ```groovy
 implementation 'io.github.openfacade:http-facade-client:$httpFacadeVersion'
 ```
+
+To specify an HTTP engine, add the following additional dependencies:
+
+- **AsyncHttpClient**:
+
+  ```groovy
+  implementation 'io.github.openfacade:http-facade-client-okhttp:$httpFacadeVersion'
+  implementation 'org.asynchttpclient:async-http-client:$asynchttpVersion'
+   ```
+
+- **OkHttp**:
+
+  ```groovy
+  implementation 'io.github.openfacade:http-facade-client-okhttp:$httpFacadeVersion'
+  implementation 'com.squareup.okhttp3:okhttp:$okhttpVersion'
+   ```
 
 ### Getting Started
 
