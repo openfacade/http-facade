@@ -25,4 +25,14 @@
         <Class name="io.github.openfacade.http.JavaHttpClient"/>
     </Match>
 
+    <Match>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+        <Class name="io.github.openfacade.http.JettyHttpServer"/>
+    </Match>
+
+    <Match>
+        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
+        <Class name="io.github.openfacade.http.TomcatHttpServer"/>
+    </Match>
+
 </FindBugsFilter>

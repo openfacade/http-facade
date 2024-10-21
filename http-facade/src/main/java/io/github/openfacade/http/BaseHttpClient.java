@@ -40,7 +40,7 @@ abstract class BaseHttpClient implements HttpClient {
             CompletableFuture<HttpResponse> future = this.send(request);
             return future.get(timeout.toMillis(), TimeUnit.MILLISECONDS);  // Use the configured timeout
         } catch (TimeoutException e) {
-            throw new HttpClientException("Request timed out after " + timeout.toSeconds() + " seconds", e);
+            throw new HttpClientException("Request timed out after " + timeout.getSeconds() + " seconds", e);
         } catch (Exception e) {
             throw new HttpClientException("Failed to execute synchronous request", e);
         }

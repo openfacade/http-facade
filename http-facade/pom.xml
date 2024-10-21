@@ -116,6 +116,19 @@
                             <multiReleaseOutput>true</multiReleaseOutput>
                         </configuration>
                     </execution>
+                    <execution>
+                        <id>compile-java-17</id>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <release>17</release>
+                            <compileSourceRoots>
+                                <compileSourceRoot>${project.basedir}/src/main/java17</compileSourceRoot>
+                            </compileSourceRoots>
+                            <multiReleaseOutput>true</multiReleaseOutput>
+                        </configuration>
+                    </execution>
                 </executions>
             </plugin>
             <plugin>
@@ -132,5 +145,43 @@
             </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <profile>
+            <id>java8-compile</id>
+            <activation>
+                <jdk>[1.8,1.8]</jdk>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>${maven-compiler-plugin.version}</version>
+                        <executions>
+                            <execution>
+                                <id>compile-java-8</id>
+                                <goals>
+                                    <goal>compile</goal>
+                                </goals>
+                                <configuration>
+                                    <source>8</source>
+                                    <target>8</target>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>compile-java-11</id>
+                                <phase>none</phase>
+                            </execution>
+                            <execution>
+                                <id>compile-java-17</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 
 </project>
