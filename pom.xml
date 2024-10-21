@@ -6,7 +6,7 @@
 
     <groupId>io.github.openfacade</groupId>
     <artifactId>http-facade-parent</artifactId>
-    <version>0.2.0</version>
+    <version>0.2.1</version>
     <packaging>pom</packaging>
     <modules>
         <module>http-facade</module>
