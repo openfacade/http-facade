@@ -31,6 +31,9 @@ public class HttpClientFactory {
             case OkHttp:
                 client = new OkHttpClient(httpClientConfig);
                 break;
+            case Vertx:
+                client = new VertxHttpClient(httpClientConfig);
+                break;
             default:
                 throw new IllegalStateException("Unsupported HttpClient engine: " + httpClientConfig.engine());
         }
