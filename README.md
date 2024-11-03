@@ -30,7 +30,22 @@ Add the following dependency to your `pom.xml` to include the default `http-faca
 </dependency>
 ```
 
-If you'd like to use a specific HTTP engine, you can include the following additional dependencies:
+If you'd like to use a specific HTTP engine, you need to add additional dependencies:
+
+- **ApacheHttpClient**:
+
+  ```xml
+  <dependency>
+      <groupId>io.github.openfacade</groupId>
+      <artifactId>http-facade</artifactId>
+      <version>${http-facade.version}</version>
+  </dependency>
+  <dependency>
+      <groupId>org.apache.httpcomponents.client5</groupId>
+      <artifactId>httpclient5</artifactId>
+      <version>${apache-http-client.version}</version>
+  </dependency>
+  ```
 
 - **AsyncHttpClient**:
 
@@ -44,6 +59,21 @@ If you'd like to use a specific HTTP engine, you can include the following addit
       <groupId>org.asynchttpclient</groupId>
       <artifactId>async-http-client</artifactId>
       <version>${asynchttp.version}</version>
+  </dependency>
+  ```
+
+- **Jetty**:
+
+  ```xml
+  <dependency>
+      <groupId>io.github.openfacade</groupId>
+      <artifactId>http-facade</artifactId>
+      <version>${http-facade.version}</version>
+  </dependency>
+  <dependency>
+      <groupId>org.eclipse.jetty</groupId>
+      <artifactId>jetty-client</artifactId>
+    <version>${jetty.version}</version>
   </dependency>
   ```
 
@@ -62,6 +92,21 @@ If you'd like to use a specific HTTP engine, you can include the following addit
   </dependency>
   ```
 
+- **Vertx**:
+
+  ```xml
+  <dependency>
+      <groupId>io.github.openfacade</groupId>
+      <artifactId>http-facade</artifactId>
+      <version>${http-facade.version}</version>
+  </dependency>
+  <dependency>
+      <groupId>io.vertx</groupId>
+      <artifactId>vertx-web-client</artifactId>
+    <version>${vertx.version}</version>
+  </dependency>
+  ```
+
 #### Gradle
 
 For Gradle users, add the default `http-facade` dependency:
@@ -70,21 +115,42 @@ For Gradle users, add the default `http-facade` dependency:
 implementation 'io.github.openfacade:http-facade-client:$httpFacadeVersion'
 ```
 
-To specify an HTTP engine, add the following additional dependencies:
+To specify an HTTP engine, need to add dependencies:
+
+- **ApacheHttpClient**:
+
+  ```groovy
+  implementation 'io.github.openfacade:http-facade-client-okhttp:$httpFacadeVersion'
+  implementation 'org.apache.httpcomponents.client5:httpclient5:$apacheHttpClientVersion}'
+  ```
 
 - **AsyncHttpClient**:
 
   ```groovy
   implementation 'io.github.openfacade:http-facade-client-okhttp:$httpFacadeVersion'
   implementation 'org.asynchttpclient:async-http-client:$asynchttpVersion'
-   ```
+  ```
+
+- **Jetty**:
+
+  ```groovy
+  implementation 'io.github.openfacade:http-facade-client-okhttp:$httpFacadeVersion'
+  implementation 'org.eclipse.jetty:jetty-client:$jettyVersion'
+  ```
 
 - **OkHttp**:
 
   ```groovy
   implementation 'io.github.openfacade:http-facade-client-okhttp:$httpFacadeVersion'
   implementation 'com.squareup.okhttp3:okhttp:$okhttpVersion'
-   ```
+  ```
+
+- **Vertx**:
+
+  ```groovy
+  implementation 'io.github.openfacade:http-facade-client-okhttp:$httpFacadeVersion'
+  implementation 'io.vertx:vertx-web-client:$vertxVersion'
+  ```
 
 ### Getting Started
 
