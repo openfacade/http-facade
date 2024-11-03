@@ -21,7 +21,7 @@ public class VertxHttpServer extends BaseHttpServer {
 
     private final Router router;
 
-    private io.vertx.core.http.HttpServer vertxServer;
+    private final io.vertx.core.http.HttpServer vertxServer;
 
     public VertxHttpServer(HttpServerConfig config) {
         super(config);
