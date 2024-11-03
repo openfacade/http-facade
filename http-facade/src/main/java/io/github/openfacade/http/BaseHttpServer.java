@@ -6,7 +6,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Pattern;
 
 abstract class BaseHttpServer implements HttpServer {
-    protected HttpServerConfig config;
+    protected final HttpServerConfig config;
 
     protected final Map<HttpMethod, Map<String, Route>> routes = new HashMap<>();
 
