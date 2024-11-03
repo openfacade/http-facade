@@ -18,4 +18,8 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
       - name: unit tests
-        run: mvn -B clean install -DskipTests -Dspotbugs.skip=true; mvn -B test -pl http-facade-tests
+        run: mvn -B clean install -DskipTests -Dspotbugs.skip=true; mvn -B test -pl http-facade-tests; mvn validate
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v4
+        env:
+          CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
