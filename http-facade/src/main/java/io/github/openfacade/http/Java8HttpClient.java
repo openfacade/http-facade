@@ -1,5 +1,7 @@
 package io.github.openfacade.http;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -64,14 +66,7 @@ public class Java8HttpClient extends BaseHttpClient {
             int statusCode = connection.getResponseCode();
 
             // jdk11+ can directly use byte[] responseBody = connection.getInputStream().readAllBytes();
-            InputStream inputStream = connection.getInputStream();
-            ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
-            byte[] buffer = new byte[8192];
-            int bytesRead;
-            while ((bytesRead = inputStream.read(buffer)) != -1) {
-                byteArrayOutputStream.write(buffer, 0, bytesRead);
-            }
-            byte[] responseBody = byteArrayOutputStream.toByteArray();
+            byte[] responseBody = getBytes(connection);
 
             return new HttpResponse(statusCode, responseBody, connection.getHeaderFields());
         } catch (IOException e) {
@@ -81,5 +76,17 @@ public class Java8HttpClient extends BaseHttpClient {
                 connection.disconnect();
             }
         }
+    }
+
+    @NotNull
+    private static byte[] getBytes(HttpURLConnection connection) throws IOException {
+        InputStream inputStream = connection.getInputStream();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        byte[] buffer = new byte[8192];
+        int bytesRead;
+        while ((bytesRead = inputStream.read(buffer)) != -1) {
+            byteArrayOutputStream.write(buffer, 0, bytesRead);
+        }
+        return byteArrayOutputStream.toByteArray();
     }
 }

@@ -1,12 +1,16 @@
 package io.github.openfacade.http.tests;
 
-import io.github.openfacade.http.*;
+import io.github.openfacade.http.BasicAuthRequestFilter;
+import io.github.openfacade.http.HttpClient;
+import io.github.openfacade.http.HttpClientConfig;
+import io.github.openfacade.http.HttpClientFactory;
 import io.github.openfacade.http.HttpMethod;
 import io.github.openfacade.http.HttpRequest;
 import io.github.openfacade.http.HttpResponse;
 import io.github.openfacade.http.HttpServer;
 import io.github.openfacade.http.HttpServerConfig;
 import io.github.openfacade.http.HttpServerFactory;
+import io.github.openfacade.http.RequestFilter;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
