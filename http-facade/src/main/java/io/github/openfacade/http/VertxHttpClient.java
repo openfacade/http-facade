@@ -56,20 +56,18 @@ public class VertxHttpClient extends BaseHttpClient {
             } else {
                 return httpRequest.send();
             }
-        }).onSuccess(response -> {
-            response.bodyHandler(buffer -> {
-                HttpResponse httpResponse = new HttpResponse(
-                        response.statusCode(),
-                        buffer.getBytes(),
-                        response.headers().entries().stream()
-                                .collect(Collectors.groupingBy(
-                                        Map.Entry::getKey,
-                                        Collectors.mapping(Map.Entry::getValue, Collectors.toList())
-                                ))
-                );
-                futureResponse.complete(httpResponse);
-            });
-        }).onFailure(futureResponse::completeExceptionally);
+        }).onSuccess(response -> response.bodyHandler(buffer -> {
+            HttpResponse httpResponse = new HttpResponse(
+                    response.statusCode(),
+                    buffer.getBytes(),
+                    response.headers().entries().stream()
+                            .collect(Collectors.groupingBy(
+                                    Map.Entry::getKey,
+                                    Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+                            ))
+            );
+            futureResponse.complete(httpResponse);
+        })).onFailure(futureResponse::completeExceptionally);
 
         return futureResponse;
     }
