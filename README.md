@@ -2,7 +2,19 @@
 
 ![License](https://img.shields.io/badge/license-Apache2.0-green) ![Language](https://img.shields.io/badge/language-Java-blue.svg) [![version](https://img.shields.io/github/v/tag/openfacade/http-facade?label=release&color=blue)](https://github.com/openfacade/http-facade/releases) [![codecov](https://codecov.io/gh/openfacade/http-facade/branch/main/graph/badge.svg)](https://codecov.io/gh/openfacade/http-facade)
 
+English | [简体中文](README_CN.md)
+
 `HTTP Facade` is a flexible Java library that provides a unified API for both HTTP clients and HTTP servers(WIP). The library supports multiple underlying implementations (e.g., OkHttp, AsyncHttpClient for clients) and provides easy configuration of HTTP requests and responses, connection timeouts, TLS settings, routing, and more.
+
+## Why Use a Facade Library?
+
+The `HTTP Facade` library offers a streamlined approach for integrating multiple HTTP client implementations within a single application.
+By providing a unified API, it abstracts the complexities of various HTTP engines (such as `OkHttp` or `AsyncHttpClient`) while allowing easy configuration of essential features like request timeouts, TLS settings.
+
+In many integration scenarios, applications based on HTTP libraries may need to adapt to specific requirements.
+For instance, some embedded environments prioritize smaller footprint sizes, Android applications require platform-specific compatibility, and other cases may demand high performance and low latency.
+In these situations, using a thin facade layer can be highly advantageous, allowing developers to meet diverse needs without rewriting core logic or managing multiple client libraries.
+Instead, `HTTP Facade` enables easy switching between implementations, ensuring consistency, simplicity, and enhanced maintainability across various use cases.
 
 ## HttpClientFacade
 
