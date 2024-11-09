@@ -1,5 +1,7 @@
 package io.github.openfacade.http;
 
+import lombok.AllArgsConstructor;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.jetbrains.annotations.NotNull;
 
@@ -121,6 +123,8 @@ public class HttpClientConfig {
         private ConnectionPoolConfig connectionPoolConfig;
 
         @Setter
+        @AllArgsConstructor
+        @NoArgsConstructor
         public static class ConnectionPoolConfig {
             private int maxIdleConnections;
 
