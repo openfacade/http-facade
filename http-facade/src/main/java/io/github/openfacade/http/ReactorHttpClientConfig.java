@@ -1,7 +1,10 @@
 package io.github.openfacade.http;
 
+import lombok.Setter;
+
 import java.time.Duration;
 
+@Setter
 public class ReactorHttpClientConfig {
     private Duration timeout;
 
