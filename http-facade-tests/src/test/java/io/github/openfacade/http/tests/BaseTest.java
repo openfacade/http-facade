@@ -34,6 +34,7 @@ public abstract class BaseTest {
                 new HttpClientConfig.Builder().engine(HttpClientEngine.Async).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.Java).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.Java8).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.Jetty).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.OkHttp).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.Vertx).build()
         );
