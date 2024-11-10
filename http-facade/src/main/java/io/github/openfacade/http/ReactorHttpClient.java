@@ -53,68 +53,67 @@ public class ReactorHttpClient {
      * @param headers The HTTP header.
      * @return A Mono that resolves to an HttpResponse.
      */
-    Mono<HttpResponse> send(HttpMethod method, Mono<String> url, Publisher<byte[]> body, @Nullable Map<String, List<String>> headers) {
+    public Mono<HttpResponse> send(HttpMethod method, Mono<String> url, Publisher<byte[]> body, @Nullable Map<String, List<String>> headers) {
+        HttpClient httpClient = client;
         if (headers != null) {
-            client = client.headers(reactorHeaders -> {
+            httpClient = client.headers(reactorHeaders -> {
                 headers.forEach(reactorHeaders::add);
             });
         }
 
         if (HttpMethod.POST.equals(method)) {
-            return handleResponse(client.post().uri(url).send((req, out) -> out.sendByteArray(body)));
+            return handleResponse(httpClient.post().uri(url).send((req, out) -> out.sendByteArray(body)));
         }
         if (HttpMethod.PUT.equals(method)) {
-            return handleResponse(client.put().uri(url).send((req, out) -> out.sendByteArray(body)));
+            return handleResponse(httpClient.put().uri(url).send((req, out) -> out.sendByteArray(body)));
         }
         if (HttpMethod.DELETE.equals(method)) {
-            return handleResponse(client.delete().uri(url));
+            return handleResponse(httpClient.delete().uri(url));
         }
         if (HttpMethod.GET.equals(method)) {
-            return handleResponse(client.get().uri(url));
+            return handleResponse(httpClient.get().uri(url));
         }
         if (HttpMethod.HEAD.equals(method)) {
-            return handleResponse(client.head().uri(url));
+            return handleResponse(httpClient.head().uri(url));
         }
         if (HttpMethod.PATCH.equals(method)) {
-            return handleResponse(client.patch().uri(url).send((req, out) -> out.sendByteArray(body)));
+            return handleResponse(httpClient.patch().uri(url).send((req, out) -> out.sendByteArray(body)));
         }
         if (HttpMethod.OPTIONS.equals(method)) {
-            return handleResponse(client.options().uri(url));
+            return handleResponse(httpClient.options().uri(url));
         }
         throw new IllegalArgumentException("Unsupported HTTP method: " + method);
     }
 
-
-
-    Mono<HttpResponse> post(Mono<String> url, Publisher<byte[]> body) {
+    public Mono<HttpResponse> post(Mono<String> url, Publisher<byte[]> body) {
         return send(HttpMethod.POST,url, body, null);
     }
 
-    Mono<HttpResponse> post(Mono<String> url, Publisher<byte[]> body, Map<String, List<String>> headers) {
+    public Mono<HttpResponse> post(Mono<String> url, Publisher<byte[]> body, Map<String, List<String>> headers) {
         return send(HttpMethod.POST,url, body, headers);
     }
 
-    Mono<HttpResponse> put(Mono<String> url, Publisher<byte[]> body) {
+    public Mono<HttpResponse> put(Mono<String> url, Publisher<byte[]> body) {
         return send(HttpMethod.PUT, url, body, null);
     }
 
-    Mono<HttpResponse> put(Mono<String> url, Publisher<byte[]> body, Map<String, List<String>> headers) {
+    public Mono<HttpResponse> put(Mono<String> url, Publisher<byte[]> body, Map<String, List<String>> headers) {
         return send(HttpMethod.PUT, url, body, headers);
     }
 
-    Mono<HttpResponse> delete(Mono<String> url) {
+    public Mono<HttpResponse> delete(Mono<String> url) {
         return send(HttpMethod.DELETE, url, Mono.empty(), null);
     }
 
-    Mono<HttpResponse> delete(Mono<String> url, Map<String, List<String>> headers) {
+    public Mono<HttpResponse> delete(Mono<String> url, Map<String, List<String>> headers) {
         return send(HttpMethod.DELETE, url, Mono.empty(), headers);
     }
 
-    Mono<HttpResponse> get(Mono<String> url) {
+    public Mono<HttpResponse> get(Mono<String> url) {
         return send(HttpMethod.GET, url, Mono.empty(), null);
     }
 
-    Mono<HttpResponse> get(Mono<String> url, Map<String, List<String>> headers) {
+    public Mono<HttpResponse> get(Mono<String> url, Map<String, List<String>> headers) {
         return send(HttpMethod.GET, url, Mono.empty(), headers);
     }
 
@@ -127,13 +126,14 @@ public class ReactorHttpClient {
                 Map<String, List<String>> responseHeaders = new HashMap<>();
                 headers.iteratorAsString()
                        .forEachRemaining(entry -> {
-                           List<String> list = new ArrayList<>();
-                           list.add(entry.getValue());
-                           responseHeaders.put(entry.getKey(), list);
+                           ArrayList<String> headerValues = new ArrayList<>();
+                           headerValues.add(entry.getValue());
+                           responseHeaders.put(entry.getKey(), headerValues);
                        });
                 return byteBody.map(responseBody -> new HttpResponse(code, responseBody, responseHeaders));
             }
-            return byteBody.map(responseBody -> new HttpResponse(code, responseBody));
+            return byteBody.map(responseBody -> new HttpResponse(code, responseBody))
+                           .switchIfEmpty(Mono.just(new HttpResponse(code)));
         });
     }
 }

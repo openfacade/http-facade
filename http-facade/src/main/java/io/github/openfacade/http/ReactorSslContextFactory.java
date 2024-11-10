@@ -38,7 +38,7 @@ public class ReactorSslContextFactory {
 
             return sslContextBuilder.build();
         } catch (Exception e) {
-            throw new RuntimeException("Failed to set up tls configuration", e);
+            throw new RuntimeException("Error setting up SSL configuration", e);
         }
     }
 }

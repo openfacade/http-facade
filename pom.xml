@@ -45,6 +45,7 @@
         <maven-scm-provider-gitexe.version>2.1.0</maven-scm-provider-gitexe.version>
         <maven-source-plugin.version>3.3.1</maven-source-plugin.version>
         <maven-surefire-plugin.version>3.5.0</maven-surefire-plugin.version>
+        <reactor-netty-http.version>1.1.21</reactor-netty-http.version>
         <spotbugs-maven-plugin.version>4.8.6.3</spotbugs-maven-plugin.version>
         <spotless-maven-plugin.version>2.43.0</spotless-maven-plugin.version>
     </properties>

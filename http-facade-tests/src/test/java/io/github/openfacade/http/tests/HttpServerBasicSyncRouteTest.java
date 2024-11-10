@@ -9,11 +9,16 @@ import io.github.openfacade.http.HttpResponse;
 import io.github.openfacade.http.HttpServer;
 import io.github.openfacade.http.HttpServerConfig;
 import io.github.openfacade.http.HttpServerFactory;
+import io.github.openfacade.http.ReactorHttpClient;
+import io.github.openfacade.http.ReactorHttpClientConfig;
+import io.github.openfacade.http.ReactorHttpClientFactory;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 
 @Slf4j
 public class HttpServerBasicSyncRouteTest extends BaseTest {
@@ -40,6 +45,30 @@ public class HttpServerBasicSyncRouteTest extends BaseTest {
         Assertions.assertArrayEquals("route2".getBytes(), route2Resp.body());
 
         client.close();
+        server.stop().join();
+    }
+
+    @ParameterizedTest
+    @MethodSource("reactorClientServerConfigProvider")
+    void testReactorClientServerCombinations(ReactorHttpClientConfig clientConfig, HttpServerConfig serverConfig) throws Exception {
+        ReactorHttpClient client = ReactorHttpClientFactory.createReactorHttpClient(clientConfig);
+        HttpServer server = HttpServerFactory.createHttpServer(serverConfig);
+
+        server.addSyncRoute("/route1", HttpMethod.GET, request -> new HttpResponse(200, "route1".getBytes()));
+        server.addSyncRoute("/route2", HttpMethod.GET, request -> new HttpResponse(200, "route2".getBytes()));
+
+        server.start().join();
+
+        String prefix = String.format("http://localhost:%d", server.listenPort());
+        client.get(Mono.just(prefix + "/route1")).doOnSuccess(response -> {
+            Assertions.assertEquals(200, response.statusCode());
+            Assertions.assertEquals("route1", new String(response.body()));
+        }).block(Duration.ofSeconds(5));
+        client.get(Mono.just(prefix + "/route2")).doOnSuccess(response -> {
+            Assertions.assertEquals(200, response.statusCode());
+            Assertions.assertEquals("route2", new String(response.body()));
+        }).block(Duration.ofSeconds(5));
+
         server.stop().join();
     }
 }

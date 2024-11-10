@@ -76,6 +76,13 @@
             <version>${tomcat.version}</version>
             <scope>test</scope>
         </dependency>
+        <!-- reactor -->
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty-http</artifactId>
+            <version>${reactor-netty-http.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- vertx -->
         <dependency>
             <groupId>io.vertx</groupId>

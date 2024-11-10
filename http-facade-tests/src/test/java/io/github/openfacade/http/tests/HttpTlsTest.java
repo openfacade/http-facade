@@ -10,11 +10,17 @@ import io.github.openfacade.http.HttpServer;
 import io.github.openfacade.http.HttpServerConfig;
 import io.github.openfacade.http.HttpServerEngine;
 import io.github.openfacade.http.HttpServerFactory;
+import io.github.openfacade.http.ReactorHttpClient;
+import io.github.openfacade.http.ReactorHttpClientConfig;
+import io.github.openfacade.http.ReactorHttpClientFactory;
 import io.github.openfacade.http.TlsConfig;
 import lombok.extern.slf4j.Slf4j;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import reactor.core.publisher.Mono;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
@@ -55,6 +61,15 @@ public class HttpTlsTest extends BaseTest{
         );
     }
 
+    @Override
+    protected ReactorHttpClientConfig reactorHttpClientConfig() {
+        TlsConfig tlsConfig = new TlsConfig.Builder()
+            .keyStore(keyJksPath(), JKS_PASSWORD)
+            .trustStore(trustJksPath(), JKS_PASSWORD)
+            .build();
+        return new ReactorHttpClientConfig.Builder().tlsConfig(tlsConfig).build();
+    }
+
     @ParameterizedTest
     @MethodSource("clientServerConfigProvider")
     void testHttpClientServerCombinations(HttpClientConfig clientConfig, HttpServerConfig serverConfig) throws Exception {
@@ -72,6 +87,26 @@ public class HttpTlsTest extends BaseTest{
         String url = String.format("https://localhost:%d/hello", server.listenPort());
 
         client.close();
+        server.stop().join();
+    }
+
+    @ParameterizedTest
+    @MethodSource("reactorClientServerConfigProvider")
+    void testReactorHttpClientServerCombinations(ReactorHttpClientConfig clientConfig, HttpServerConfig serverConfig) throws Exception {
+        ReactorHttpClient client = ReactorHttpClientFactory.createReactorHttpClient(clientConfig);
+        HttpServer server = HttpServerFactory.createHttpServer(serverConfig);
+        server.addRoute("/hello", HttpMethod.GET, request -> {
+            HttpResponse response = new HttpResponse(200, "Hello Tls!".getBytes());
+            return CompletableFuture.completedFuture(response);
+        });
+
+        server.start().join();
+
+        String url = String.format("https://localhost:%d/hello", server.listenPort());
+        client.get(Mono.just(url)).doOnSuccess(response -> {
+            Assertions.assertEquals(200, response.statusCode());
+            Assertions.assertEquals("Hello Tls!", new String(response.body()));
+        }).block(Duration.ofSeconds(5));
         server.stop().join();
     }
 }

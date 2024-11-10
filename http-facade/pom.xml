@@ -91,6 +91,12 @@
             <version>${vertx.version}</version>
             <scope>provided</scope>
         </dependency>
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty-http</artifactId>
+            <version>${reactor-netty-http.version}</version>
+            <scope>provided</scope>
+        </dependency>
     </dependencies>
 
     <build>
