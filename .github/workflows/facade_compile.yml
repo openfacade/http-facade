@@ -18,4 +18,4 @@ jobs:
           java-version: '8'
           distribution: 'temurin'
       - name: compile
-        run: mvn -X clean package -Dmaven.test.skip=true -pl http-facade
+        run: mvn clean package -Dmaven.test.skip=true -pl http-facade

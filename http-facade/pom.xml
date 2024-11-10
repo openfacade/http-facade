@@ -58,6 +58,13 @@
             <version>${okhttp.version}</version>
             <scope>provided</scope>
         </dependency>
+        <!-- reactor -->
+        <dependency>
+            <groupId>io.projectreactor.netty</groupId>
+            <artifactId>reactor-netty-http</artifactId>
+            <version>${reactor.version}</version>
+            <scope>provided</scope>
+        </dependency>
         <!-- tomcat -->
         <dependency>
             <groupId>org.apache.tomcat.embed</groupId>
