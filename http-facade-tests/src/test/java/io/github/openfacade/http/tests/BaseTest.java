@@ -4,6 +4,7 @@ import io.github.openfacade.http.HttpClientConfig;
 import io.github.openfacade.http.HttpClientEngine;
 import io.github.openfacade.http.HttpServerConfig;
 import io.github.openfacade.http.HttpServerEngine;
+import io.github.openfacade.http.ReactorHttpClientConfig;
 import org.junit.jupiter.api.TestInstance;
 import org.junit.jupiter.params.provider.Arguments;
 
@@ -30,6 +31,11 @@ public abstract class BaseTest {
         );
     }
 
+    protected ReactorHttpClientConfig reactorHttpClientConfig() {
+        ReactorHttpClientConfig reactorClientConfig = new ReactorHttpClientConfig.Builder().build();
+        return reactorClientConfig;
+    }
+
     protected Stream<Arguments> clientServerConfigProvider() {
         List<HttpClientConfig> httpClientConfigs = clientConfigList();
         List<HttpServerConfig> httpServerConfigs = serverConfigList();
@@ -38,5 +44,11 @@ public abstract class BaseTest {
                 .flatMap(clientConfig -> httpServerConfigs.stream()
                         .map(serverConfig -> Arguments.arguments(clientConfig, serverConfig))
                 );
+    }
+
+    protected Stream<Arguments> reactorClientServerConfigProvider() {
+        List<HttpServerConfig> httpServerConfigs = serverConfigList();
+        ReactorHttpClientConfig reactorClientConfig = reactorHttpClientConfig();
+        return httpServerConfigs.stream().map(serverConfig -> Arguments.arguments(reactorClientConfig, serverConfig));
     }
 }
