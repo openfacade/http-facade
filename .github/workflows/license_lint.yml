@@ -12,6 +12,18 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-[default.extend-words]
-# keyword fp
-"vertx" = "vertx"
+name: license lint
+on:
+  pull_request:
+    branches:
+      - main
+jobs:
+  build:
+    name: license lint
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: licenselint
+        uses: shoothzj/licenselint@main
+        with:
+          author: OpenFacade Authors
