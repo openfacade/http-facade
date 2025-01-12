@@ -28,6 +28,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
+import java.time.Duration;
 import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.TimeUnit;
@@ -53,10 +54,17 @@ public class OkHttpClient extends BaseHttpClient {
             HttpClientConfig.OkHttpConfig.ConnectionPoolConfig poolConfig = config.okHttpConfig().connectionPoolConfig();
             if (poolConfig != null) {
                 int maxIdleConnections = poolConfig.maxIdleConnections();
-                long keepAliveNanos = poolConfig.keepAliveDuration().toNanos();
-                if (maxIdleConnections > 0 && keepAliveNanos > 0) {
-                    okHttpClientBuilder.connectionPool(new ConnectionPool(maxIdleConnections, keepAliveNanos, TimeUnit.NANOSECONDS));
+                if (maxIdleConnections < 0) {
+                    throw new IllegalArgumentException("maxIdleConnections should not be negative.");
                 }
+
+                Duration duration = poolConfig.keepAliveDuration();
+                if (duration == null || duration.isNegative()) {
+                    throw new IllegalArgumentException("keepAliveDuration should not be null or negative.");
+                }
+                long keepAliveNanos = duration.toNanos();
+                okHttpClientBuilder.connectionPool(
+                        new ConnectionPool(maxIdleConnections, keepAliveNanos, TimeUnit.NANOSECONDS));
             }
         }
 
