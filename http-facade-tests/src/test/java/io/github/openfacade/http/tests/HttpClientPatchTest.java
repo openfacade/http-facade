@@ -41,7 +41,7 @@ public class HttpClientPatchTest extends BaseTest {
     protected List<HttpClientConfig> clientConfigList() {
         return List.of(
                 new HttpClientConfig.Builder().engine(HttpClientEngine.AsyncHttpClient).build(),
-                new HttpClientConfig.Builder().engine(HttpClientEngine.JAVA).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.Java).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.OkHttp).build()
         );
     }
