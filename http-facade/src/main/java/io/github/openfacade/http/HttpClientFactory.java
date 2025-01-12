@@ -38,10 +38,10 @@ public class HttpClientFactory {
             case AsyncHttpClient:
                 client = new AsyncHttpClient(httpClientConfig);
                 break;
-            case JAVA:
+            case Java:
                 client = new JavaHttpClient(httpClientConfig);
                 break;
-            case JAVA8:
+            case Java8:
                 client = new Java8HttpClient(httpClientConfig);
                 break;
             case OkHttp:
@@ -67,10 +67,10 @@ public class HttpClientFactory {
         try {
             // Attempt to load java.net.HttpClient
             Class.forName("java.net.http.HttpClient");
-            return HttpClientEngine.JAVA;
+            return HttpClientEngine.Java;
         } catch (ClassNotFoundException e) {
             // If java.net.HttpClient is not available (Java 8), fall back to HttpURLConnection
-            return HttpClientEngine.JAVA8;
+            return HttpClientEngine.Java8;
         }
     }
 }
