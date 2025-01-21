@@ -35,7 +35,7 @@ public class HttpClientFactory {
         }
 
         switch (engine) {
-            case AsyncHttpClient:
+            case Async:
                 client = new AsyncHttpClient(httpClientConfig);
                 break;
             case Java:

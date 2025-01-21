@@ -17,7 +17,7 @@
 package io.github.openfacade.http;
 
 public enum HttpClientEngine {
-    AsyncHttpClient,
+    Async,
     // jdk 11+ HttpClient
     Java,
     // jdk 8+ HttpURLConnection
