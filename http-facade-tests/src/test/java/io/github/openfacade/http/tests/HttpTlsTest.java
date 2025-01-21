@@ -53,7 +53,7 @@ public class HttpTlsTest extends BaseTest{
                 .trustStore(trustJksPath(), JKS_PASSWORD)
                 .build();
         return List.of(
-                new HttpClientConfig.Builder().engine(HttpClientEngine.AsyncHttpClient).tlsConfig(tlsConfig).build(),
+                new HttpClientConfig.Builder().engine(HttpClientEngine.Async).tlsConfig(tlsConfig).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.Java).tlsConfig(tlsConfig).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.Java8).tlsConfig(tlsConfig).build(),
                 new HttpClientConfig.Builder().engine(HttpClientEngine.OkHttp).tlsConfig(tlsConfig).build()
