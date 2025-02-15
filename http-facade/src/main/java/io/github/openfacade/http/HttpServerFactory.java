@@ -21,13 +21,13 @@ public class HttpServerFactory {
         HttpServer server;
         switch (httpServerConfig.engine()) {
             case Jetty:
-                server = new JettyHttpServer(httpServerConfig);
+                server = JettyHttpServerFactory.createHttpServer(httpServerConfig);
                 break;
             case Tomcat:
-                server = new TomcatHttpServer(httpServerConfig);
+                server = TomcatHttpServerFactory.createHttpServer(httpServerConfig);
                 break;
             case Vertx:
-                server = new VertxHttpServer(httpServerConfig);
+                server = VertxHttpServerFactory.createHttpServer(httpServerConfig);
                 break;
             default:
                 throw new IllegalStateException("Unsupported HttpServer engine: " + httpServerConfig.engine());

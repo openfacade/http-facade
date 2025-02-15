@@ -30,13 +30,4 @@
         <Bug pattern="EI_EXPOSE_REP2"/>
     </Match>
 
-    <Match>
-        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
-        <Class name="io.github.openfacade.http.TomcatHttpServer"/>
-    </Match>
-
-    <Match>
-        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
-        <Class name="io.github.openfacade.http.JettyHttpServer"/>
-    </Match>
 </FindBugsFilter>

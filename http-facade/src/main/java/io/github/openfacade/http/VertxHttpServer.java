@@ -17,10 +17,9 @@
 package io.github.openfacade.http;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpServerOptions;
+import io.vertx.core.http.HttpServer;
 import io.vertx.core.http.HttpServerRequest;
 import io.vertx.core.http.HttpServerResponse;
-import io.vertx.core.net.JksOptions;
 import io.vertx.ext.web.Router;
 import lombok.extern.slf4j.Slf4j;
 import org.jetbrains.annotations.Nullable;
@@ -39,24 +38,11 @@ public class VertxHttpServer extends BaseHttpServer {
 
     private final io.vertx.core.http.HttpServer vertxServer;
 
-    public VertxHttpServer(HttpServerConfig config) {
+    public VertxHttpServer(HttpServerConfig config, Vertx vertx, Router router, HttpServer vertxServer) {
         super(config);
-        this.vertx = Vertx.vertx();
-        HttpServerOptions options = new HttpServerOptions();
-        if (config.tlsConfig() != null) {
-            TlsConfig tlsConfig = config.tlsConfig();
-            options.setSsl(true)
-                    .setKeyCertOptions(new JksOptions()
-                            .setPath(tlsConfig.keyStorePath())
-                            .setPassword(String.valueOf(tlsConfig.keyStorePassword())));
-            if (tlsConfig.trustStorePath() != null) {
-                options.setTrustOptions(new JksOptions()
-                        .setPath(tlsConfig.trustStorePath())
-                        .setPassword(String.valueOf(tlsConfig.trustStorePassword())));
-            }
-        }
-        this.router = Router.router(vertx);
-        this.vertxServer = vertx.createHttpServer(options);
+        this.vertx = vertx;
+        this.router = router;
+        this.vertxServer = vertxServer;
     }
 
     @Override

@@ -32,20 +32,24 @@ import java.util.concurrent.CompletableFuture;
 public class TomcatHttpServer extends ServletHttpServer {
     private final Tomcat tomcat;
 
-    public TomcatHttpServer(HttpServerConfig config) {
+    public TomcatHttpServer(HttpServerConfig config, Tomcat tomcat) {
         super(config);
-        this.tomcat = new Tomcat();
-        tomcat.setPort(config.port() == 0 ? SocketUtil.findAvailablePort() : config.port());
+        this.tomcat = tomcat;
+    }
 
-        Context ctx = tomcat.addContext("", null);
+    @Override
+    public CompletableFuture<Void> start() {
+        this.tomcat.setPort(config.port() == 0 ? SocketUtil.findAvailablePort() : config.port());
+
+        Context ctx = this.tomcat.addContext("", null);
 
         if (config.tlsConfig() != null) {
             TlsConfig tlsConfig = config.tlsConfig();
             String keyStorePath = tlsConfig.keyStorePath();
             char[] keyStorePassword = tlsConfig.keyStorePassword();
 
-            tomcat.getConnector().setSecure(true);
-            tomcat.getConnector().setScheme("https");
+            this.tomcat.getConnector().setSecure(true);
+            this.tomcat.getConnector().setScheme("https");
 
             SSLHostConfig sslHostConfig = new SSLHostConfig();
             SSLHostConfigCertificate cert = new SSLHostConfigCertificate(sslHostConfig, Type.RSA);
@@ -53,7 +57,7 @@ public class TomcatHttpServer extends ServletHttpServer {
             cert.setCertificateKeystorePassword(new String(keyStorePassword));
 
             sslHostConfig.addCertificate(cert);
-            tomcat.getConnector().addSslHostConfig(sslHostConfig);
+            this.tomcat.getConnector().addSslHostConfig(sslHostConfig);
 
             // Enforce HTTPS (optional)
             SecurityConstraint securityConstraint = new SecurityConstraint();
@@ -66,10 +70,6 @@ public class TomcatHttpServer extends ServletHttpServer {
 
         Tomcat.addServlet(ctx, "requestHandlerServlet", new RequestHandlerServlet());
         ctx.addServletMappingDecoded("/*", "requestHandlerServlet");
-    }
-
-    @Override
-    public CompletableFuture<Void> start() {
         return CompletableFuture.runAsync(() -> {
             try {
                 tomcat.start();
