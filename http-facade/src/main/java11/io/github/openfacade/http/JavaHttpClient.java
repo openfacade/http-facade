@@ -22,23 +22,9 @@ import java.util.concurrent.CompletableFuture;
 public class JavaHttpClient extends BaseHttpClient {
     private final java.net.http.HttpClient client;
 
-    public JavaHttpClient(HttpClientConfig config) {
+    public JavaHttpClient(HttpClientConfig config, java.net.http.HttpClient httpClient) {
         super(config);
-        java.net.http.HttpClient.Builder builder = java.net.http.HttpClient.newBuilder()
-                .version(java.net.http.HttpClient.Version.HTTP_1_1)
-                .followRedirects(java.net.http.HttpClient.Redirect.NORMAL);
-        if (config.connectTimeout() != null) {
-            builder = builder.connectTimeout(config.connectTimeout());
-        }
-        if (config.tlsConfig() != null) {
-            builder = builder.sslContext(JdkSslContextUtil.buildSSLContextFromJks(
-                    config.tlsConfig().keyStorePath(),
-                    config.tlsConfig().keyStorePassword(),
-                    config.tlsConfig().trustStorePath(),
-                    config.tlsConfig().trustStorePassword(),
-                    config.tlsConfig().verifyDisabled()));
-        }
-        this.client = builder.build();
+        this.client = httpClient;
     }
 
     @Override

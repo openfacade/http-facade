@@ -18,8 +18,6 @@ package io.github.openfacade.http;
 
 import okhttp3.Call;
 import okhttp3.Callback;
-import okhttp3.ConnectionPool;
-import okhttp3.ConnectionSpec;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
@@ -28,73 +26,15 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.time.Duration;
-import java.util.Collections;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 public class OkHttpClient extends BaseHttpClient {
 
     private final okhttp3.OkHttpClient client;
 
-    public OkHttpClient(HttpClientConfig config) {
+    public OkHttpClient(HttpClientConfig config, okhttp3.OkHttpClient client) {
         super(config);
-        okhttp3.OkHttpClient.Builder okHttpClientBuilder = new okhttp3.OkHttpClient.Builder();
-
-        if (config.connectTimeout() != null) {
-            okHttpClientBuilder.connectTimeout(config.connectTimeout());
-        }
-        if (config.timeout() != null) {
-            okHttpClientBuilder.readTimeout(config.timeout())
-                    .writeTimeout(config.timeout());
-        }
-
-        if (config.okHttpConfig() != null) {
-            okHttpClientBuilder.retryOnConnectionFailure(config.okHttpConfig().retryOnConnectionFailure());
-            HttpClientConfig.OkHttpConfig.ConnectionPoolConfig poolConfig = config.okHttpConfig().connectionPoolConfig();
-            if (poolConfig != null) {
-                int maxIdleConnections = poolConfig.maxIdleConnections();
-                if (maxIdleConnections < 0) {
-                    throw new IllegalArgumentException("maxIdleConnections should not be negative.");
-                }
-
-                Duration duration = poolConfig.keepAliveDuration();
-                if (duration == null || duration.isNegative()) {
-                    throw new IllegalArgumentException("keepAliveDuration should not be null or negative.");
-                }
-                long keepAliveNanos = duration.toNanos();
-                okHttpClientBuilder.connectionPool(
-                        new ConnectionPool(maxIdleConnections, keepAliveNanos, TimeUnit.NANOSECONDS));
-            }
-        }
-
-        if (config.tlsConfig() != null) {
-            TlsConfig tlsConfig = config.tlsConfig();
-
-            // set tls version and cipher suits
-            ConnectionSpec.Builder connectionSpecBuilder = new ConnectionSpec.Builder(ConnectionSpec.MODERN_TLS);
-            if (tlsConfig.versions() != null) {
-                connectionSpecBuilder.tlsVersions(tlsConfig.versions());
-            }
-            if (tlsConfig.cipherSuites() != null) {
-                connectionSpecBuilder.cipherSuites(tlsConfig.cipherSuites());
-            }
-            ConnectionSpec connectionSpec = connectionSpecBuilder.build();
-
-            okHttpClientBuilder.connectionSpecs(Collections.singletonList(connectionSpec));
-
-            // create ssl context from keystore and truststore
-            OkHttpSslContextFactory.OkHttpSslContext sslContext = OkHttpSslContextFactory.createOkHttpSslContext(
-                    tlsConfig);
-            okHttpClientBuilder.sslSocketFactory(sslContext.sslSocketFactory, sslContext.x509TrustManager);
-
-            // override hostnameVerifier to make it always success when hostname verification has been disabled
-            if (tlsConfig.hostnameVerifyDisabled()) {
-                okHttpClientBuilder.hostnameVerifier((s, sslSession) -> true);
-            }
-        }
-
-        this.client = okHttpClientBuilder.build();
+        this.client = client;
     }
 
     @Override

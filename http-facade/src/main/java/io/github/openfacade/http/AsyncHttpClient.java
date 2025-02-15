@@ -21,7 +21,6 @@ import java.util.concurrent.CompletableFuture;
 public class AsyncHttpClient extends BaseHttpClient {
     public AsyncHttpClient(HttpClientConfig config) {
         super(config);
-        throw new UnsupportedOperationException("jdk11 is required for AsyncHttpClient");
     }
 
     @Override

@@ -24,7 +24,6 @@ import java.util.concurrent.CompletableFuture;
 public class TomcatHttpServer extends ServletHttpServer {
     public TomcatHttpServer(HttpServerConfig config) {
         super(config);
-        throw new UnsupportedOperationException("jdk17 is required for TomcatHttpServer");
     }
 
     @Override

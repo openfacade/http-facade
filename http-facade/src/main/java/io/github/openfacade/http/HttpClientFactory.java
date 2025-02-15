@@ -36,19 +36,19 @@ public class HttpClientFactory {
 
         switch (engine) {
             case Async:
-                client = new AsyncHttpClient(httpClientConfig);
+                client = AsyncHttpClientFactory.createHttpClient(httpClientConfig);
                 break;
             case Java:
-                client = new JavaHttpClient(httpClientConfig);
+                client = JavaHttpClientFactory.createHttpClient(httpClientConfig);
                 break;
             case Java8:
-                client = new Java8HttpClient(httpClientConfig);
+                client = Java8HttpClientFactory.createHttpClient(httpClientConfig);
                 break;
             case OkHttp:
-                client = new OkHttpClient(httpClientConfig);
+                client = OkHttpClientFactory.createHttpClient(httpClientConfig);
                 break;
             case Vertx:
-                client = new VertxHttpClient(httpClientConfig);
+                client = VertxHttpClientFactory.createHttpClient(httpClientConfig);
                 break;
             default:
                 throw new IllegalStateException("Unsupported HttpClient engine: " + httpClientConfig.engine());

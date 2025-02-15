@@ -32,27 +32,11 @@
 
     <Match>
         <Bug pattern="CT_CONSTRUCTOR_THROW"/>
-        <Class name="io.github.openfacade.http.AsyncHttpClient"/>
-    </Match>
-
-    <Match>
-        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
-        <Class name="io.github.openfacade.http.JavaHttpClient"/>
+        <Class name="io.github.openfacade.http.TomcatHttpServer"/>
     </Match>
 
     <Match>
         <Bug pattern="CT_CONSTRUCTOR_THROW"/>
         <Class name="io.github.openfacade.http.JettyHttpServer"/>
     </Match>
-
-    <Match>
-        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
-        <Class name="io.github.openfacade.http.OkHttpClient"/>
-    </Match>
-
-    <Match>
-        <Bug pattern="CT_CONSTRUCTOR_THROW"/>
-        <Class name="io.github.openfacade.http.TomcatHttpServer"/>
-    </Match>
-
 </FindBugsFilter>
