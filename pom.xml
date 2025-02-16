@@ -21,7 +21,7 @@
 
     <groupId>io.github.openfacade</groupId>
     <artifactId>http-facade-parent</artifactId>
-    <version>0.3.0</version>
+    <version>0.4.0</version>
     <packaging>pom</packaging>
     <modules>
         <module>http-facade</module>
