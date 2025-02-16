@@ -44,6 +44,9 @@ public class HttpClientFactory {
             case Java8:
                 client = Java8HttpClientFactory.createHttpClient(httpClientConfig);
                 break;
+            case Jetty:
+                client = JettyHttpClientFactory.createHttpClient(httpClientConfig);
+                break;
             case OkHttp:
                 client = OkHttpClientFactory.createHttpClient(httpClientConfig);
                 break;
