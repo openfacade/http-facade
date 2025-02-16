@@ -38,7 +38,8 @@ class OkHttpClientTest {
         HttpClientConfig clientConfig = new HttpClientConfig.Builder().engine(HttpClientEngine.OkHttp)
                 .okHttpConfig(okHttpConfig)
                 .build();
-        try (OkHttpClient ignored = new OkHttpClient(clientConfig)) {
+
+        try (OkHttpClient ignored = OkHttpClientFactory.createHttpClient(clientConfig)) {
             fail("Should throw IllegalArgumentException for illegal maxIdleConnections");
         } catch (Exception e) {
             assertInstanceOf(IllegalArgumentException.class, e);
@@ -59,7 +60,7 @@ class OkHttpClientTest {
                 .okHttpConfig(okHttpConfig)
                 .build();
 
-        try (OkHttpClient ignored = new OkHttpClient(clientConfig)) {
+        try (OkHttpClient ignored = OkHttpClientFactory.createHttpClient(clientConfig)) {
             fail("Should throw IllegalArgumentException for illegal keepAliveDuration");
         } catch (Exception e) {
             assertInstanceOf(IllegalArgumentException.class, e);

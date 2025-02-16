@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 OpenFacade Authors
+ * Copyright 2025 OpenFacade Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,15 +16,8 @@
 
 package io.github.openfacade.http;
 
-import java.util.concurrent.CompletableFuture;
-
-public class JavaHttpClient extends BaseHttpClient{
-    public JavaHttpClient(HttpClientConfig config) {
-        super(config);
-    }
-
-    @Override
-    protected CompletableFuture<HttpResponse> innerSend(HttpRequest request) {
-        throw new UnsupportedOperationException("jdk11 is required for JavaHttpClient");
+public class AsyncHttpClientFactory {
+    protected static AsyncHttpClient createHttpClient(HttpClientConfig config) {
+        throw new UnsupportedOperationException("jdk11 is required for AsyncHttpClient");
     }
 }

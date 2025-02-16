@@ -18,8 +18,6 @@ package io.github.openfacade.http;
 
 import org.asynchttpclient.AsyncCompletionHandler;
 import org.asynchttpclient.BoundRequestBuilder;
-import org.asynchttpclient.DefaultAsyncHttpClientConfig;
-import org.asynchttpclient.Dsl;
 import org.asynchttpclient.Request;
 import org.asynchttpclient.Response;
 import org.jetbrains.annotations.Nullable;
@@ -34,17 +32,9 @@ public class AsyncHttpClient extends BaseHttpClient {
 
     private final org.asynchttpclient.AsyncHttpClient client;
 
-    public AsyncHttpClient(HttpClientConfig config) {
+    public AsyncHttpClient(HttpClientConfig config, org.asynchttpclient.AsyncHttpClient asyncHttpClient) {
         super(config);
-        DefaultAsyncHttpClientConfig.Builder builder = Dsl.config();
-        if (config.connectTimeout() != null) {
-            builder = builder.setConnectTimeout(config.connectTimeout());
-        }
-        if (config.timeout() != null) {
-            builder = builder.setReadTimeout(config.timeout())
-                    .setRequestTimeout(config.timeout());
-        }
-        this.client = Dsl.asyncHttpClient(builder);
+        this.client = asyncHttpClient;
     }
 
     @Override

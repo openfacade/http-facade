@@ -24,7 +24,6 @@ import java.util.concurrent.CompletableFuture;
 public class JettyHttpServer extends ServletHttpServer {
     public JettyHttpServer(HttpServerConfig config) {
         super(config);
-        throw new UnsupportedOperationException("jdk17 is required for JettyHttpServer");
     }
 
     @Override

@@ -17,9 +17,7 @@
 package io.github.openfacade.http;
 
 import io.vertx.core.Vertx;
-import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.http.RequestOptions;
-import io.vertx.core.net.JksOptions;
 
 import java.io.IOException;
 import java.net.URI;
@@ -33,23 +31,10 @@ public class VertxHttpClient extends BaseHttpClient {
 
     private final io.vertx.core.http.HttpClient vertxClient;
 
-    public VertxHttpClient(HttpClientConfig config) {
+    public VertxHttpClient(HttpClientConfig config, Vertx vertx, io.vertx.core.http.HttpClient vertxClient) {
         super(config);
-        this.vertx = Vertx.vertx();
-        HttpClientOptions options = new HttpClientOptions();
-        if (config.tlsConfig() != null) {
-            TlsConfig tlsConfig = config.tlsConfig();
-            options.setSsl(true)
-                    .setKeyCertOptions(new JksOptions()
-                            .setPath(tlsConfig.keyStorePath())
-                            .setPassword(String.valueOf(tlsConfig.keyStorePassword())));
-            if (tlsConfig.trustStorePath() != null) {
-                options.setTrustOptions(new JksOptions()
-                        .setPath(tlsConfig.trustStorePath())
-                        .setPassword(String.valueOf(tlsConfig.trustStorePassword())));
-            }
-        }
-        this.vertxClient = vertx.createHttpClient(options);
+        this.vertx = vertx;
+        this.vertxClient = vertxClient;
     }
 
     @Override
