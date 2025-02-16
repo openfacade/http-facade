@@ -21,7 +21,6 @@ import org.eclipse.jetty.ee10.servlet.ServletContextHandler;
 import org.eclipse.jetty.ee10.servlet.ServletHolder;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
-import org.eclipse.jetty.util.ssl.SslContextFactory;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -31,28 +30,14 @@ public class JettyHttpServer extends ServletHttpServer {
 
     private final ServerConnector serverConnector;
 
-    public JettyHttpServer(HttpServerConfig config) {
+    public JettyHttpServer(HttpServerConfig config, Server server, ServerConnector serverConnector) {
         super(config);
-        server = new Server();
+        this.server = server;
+        this.serverConnector = serverConnector;
+    }
 
-        // Configure SSL if needed
-        if (config.tlsConfig() != null) {
-            TlsConfig tlsConfig = config.tlsConfig();
-            SslContextFactory.Server sslContextFactory = new SslContextFactory.Server();
-            sslContextFactory.setKeyStorePath(tlsConfig.keyStorePath());
-            sslContextFactory.setKeyStorePassword(String.valueOf(tlsConfig.keyStorePassword()));
-            if (tlsConfig.trustStorePath() != null) {
-                sslContextFactory.setTrustStorePath(tlsConfig.trustStorePath());
-                sslContextFactory.setTrustStorePassword(String.valueOf(tlsConfig.trustStorePassword()));
-            }
-            serverConnector = new ServerConnector(server, sslContextFactory);
-        } else {
-            serverConnector = new ServerConnector(server);
-        }
-
-        serverConnector.setPort(config.port() == 0 ? SocketUtil.findAvailablePort() : config.port());
-        server.addConnector(serverConnector);
-
+    @Override
+    public CompletableFuture<Void> start() {
         // Setup servlet context
         ServletContextHandler context = new ServletContextHandler();
         context.setContextPath("/");
@@ -60,10 +45,6 @@ public class JettyHttpServer extends ServletHttpServer {
 
         // Add servlet handler
         context.addServlet(new ServletHolder(new RequestHandlerServlet()), "/*");
-    }
-
-    @Override
-    public CompletableFuture<Void> start() {
         return CompletableFuture.runAsync(() -> {
             try {
                 server.start();
