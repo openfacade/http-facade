@@ -18,13 +18,14 @@ Instead, `HTTP Facade` enables easy switching between implementations, ensuring 
 
 ## HttpClientFacade
 
-### Features
+### HttpClient Support Engines
 
-- **Support for Multiple HTTP Engines**:
-    - `AsyncHttpClient`
-    - `JDK HttpClient`
-    - `JDK8 HttpClient`
-    - `OkHttp`
+- [**AsyncHttpClient**](https://github.com/AsyncHttpClient/async-http-client)
+- **JavaHttpClient**: Java11+ built-in HTTP client
+- **Java8HttpClient**: Java8 built-in HTTP client
+- [**JettyHttpClient**](https://github.com/jetty/jetty.project)
+- [**OkHttpClient**](https://github.com/square/okhttp)
+- [**VertxHttpClient**](https://github.com/vert-x3/vertx-web)
 
 ### Installation
 

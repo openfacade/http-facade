@@ -14,13 +14,14 @@
 
 ## HttpClientFacade
 
-### 特性
+### 支持的Http Client引擎
 
-- **支持多种 HTTP 引擎**：
-    - `AsyncHttpClient`
-    - `JDK HttpClient`
-    - `JDK8 HttpClient`
-    - `OkHttp`
+- [**AsyncHttpClient**](https://github.com/AsyncHttpClient/async-http-client)
+- **JavaHttpClient**: Java11+ built-in HTTP client
+- **Java8HttpClient**: Java8 built-in HTTP client
+- [**JettyHttpClient**](https://github.com/jetty/jetty.project)
+- [**OkHttpClient**](https://github.com/square/okhttp)
+- [**VertxHttpClient**](https://github.com/vert-x3/vertx-web)
 
 ### 安装
 
