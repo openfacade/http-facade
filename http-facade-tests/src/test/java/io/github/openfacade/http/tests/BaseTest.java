@@ -63,6 +63,11 @@ public abstract class BaseTest {
                 );
     }
 
+    protected Stream<Arguments> clientConfigProvider() {
+        List<HttpClientConfig> httpClientConfigs = clientConfigList();
+        return httpClientConfigs.stream().map(Arguments::arguments);
+    }
+
     protected Stream<Arguments> reactorClientServerConfigProvider() {
         List<HttpServerConfig> httpServerConfigs = serverConfigList();
         ReactorHttpClientConfig reactorClientConfig = reactorHttpClientConfig();
