@@ -21,7 +21,7 @@
     <parent>
         <groupId>io.github.openfacade</groupId>
         <artifactId>http-facade-bom</artifactId>
-        <version>0.4.0</version>
+        <version>0.4.1</version>
         <relativePath>../http-facade-bom</relativePath>
     </parent>
 

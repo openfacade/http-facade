@@ -21,7 +21,7 @@
 
     <groupId>io.github.openfacade</groupId>
     <artifactId>http-facade-project</artifactId>
-    <version>0.4.0</version>
+    <version>0.4.1</version>
     <packaging>pom</packaging>
     <modules>
         <module>http-facade</module>
@@ -34,6 +34,7 @@
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <src.dir>src/main/java</src.dir>
         <jacoco.overall.exec>${maven.multiModuleProjectDirectory}/target/jacoco/jacoco.exec</jacoco.overall.exec>
+        <lombok.version>1.18.34</lombok.version>
         <!-- plugin -->
         <central-publishing-maven-plugin.version>0.5.0</central-publishing-maven-plugin.version>
         <lombok-maven-plugin.version>1.18.20.0</lombok-maven-plugin.version>
