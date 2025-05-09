@@ -49,8 +49,12 @@ public class OkHttpClient extends BaseHttpClient {
             }
 
             @Override
-            public void onResponse(@NotNull Call call, @NotNull Response response) throws IOException {
-                future.complete(buildHttpResponse(response));
+            public void onResponse(@NotNull Call call, @NotNull Response response) {
+                try {
+                    future.complete(buildHttpResponse(response));
+                } catch (IOException e) {
+                    future.completeExceptionally(new HttpClientException("Read response failed", e));
+                }
             }
         });
 

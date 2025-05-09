@@ -49,26 +49,27 @@ public class VertxHttpClient extends BaseHttpClient {
                 .setURI(uri.getPath() + (uri.getQuery() != null ? "?" + uri.getQuery() : ""));
 
         vertxClient.request(options).compose(httpRequest -> {
-            request.headers().forEach((key, values) -> values.forEach(value -> httpRequest.putHeader(key, value)));
+                    request.headers().forEach((key, values) -> values.forEach(value -> httpRequest.putHeader(key, value)));
 
-            byte[] body = request.body();
-            if (body != null) {
-                return httpRequest.send(new String(body, StandardCharsets.UTF_8));
-            } else {
-                return httpRequest.send();
-            }
-        }).onSuccess(response -> response.bodyHandler(buffer -> {
-            HttpResponse httpResponse = new HttpResponse(
-                    response.statusCode(),
-                    buffer.getBytes(),
-                    response.headers().entries().stream()
-                            .collect(Collectors.groupingBy(
-                                    Map.Entry::getKey,
-                                    Collectors.mapping(Map.Entry::getValue, Collectors.toList())
-                            ))
-            );
-            futureResponse.complete(httpResponse);
-        })).onFailure(futureResponse::completeExceptionally);
+                    byte[] body = request.body();
+                    if (body != null) {
+                        return httpRequest.send(new String(body, StandardCharsets.UTF_8));
+                    } else {
+                        return httpRequest.send();
+                    }
+                }).onSuccess(response -> response.bodyHandler(buffer -> {
+                    HttpResponse httpResponse = new HttpResponse(
+                            response.statusCode(),
+                            buffer.getBytes(),
+                            response.headers().entries().stream()
+                                    .collect(Collectors.groupingBy(
+                                            Map.Entry::getKey,
+                                            Collectors.mapping(Map.Entry::getValue, Collectors.toList())
+                                    ))
+                    );
+                    futureResponse.complete(httpResponse);
+                }).exceptionHandler(e -> futureResponse.completeExceptionally(new HttpClientException("Read response failed", e))))
+                .onFailure(e -> futureResponse.completeExceptionally(new HttpClientException("Async request failed", e)));
 
         return futureResponse;
     }

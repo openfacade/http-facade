@@ -21,6 +21,8 @@ import io.vertx.core.http.HttpClient;
 import io.vertx.core.http.HttpClientOptions;
 import io.vertx.core.net.JksOptions;
 
+import java.util.concurrent.TimeUnit;
+
 public class VertxHttpClientFactory {
     protected static VertxHttpClient createHttpClient(HttpClientConfig config) {
         Vertx vertx = Vertx.vertx();
@@ -37,6 +39,11 @@ public class VertxHttpClientFactory {
                     .setPassword(String.valueOf(tlsConfig.trustStorePassword())));
             }
         }
+
+        options.setConnectTimeout((int)config.connectTimeout().toMillis());
+        options.setReadIdleTimeout((int)config.timeout().toMillis());
+        options.setWriteIdleTimeout((int)config.timeout().toMillis());
+        options.setIdleTimeoutUnit(TimeUnit.MILLISECONDS);
         HttpClient vertxClient = vertx.createHttpClient(options);
         return new VertxHttpClient(config, vertx, vertxClient);
     }
