@@ -36,6 +36,8 @@ public class TlsConfig {
 
     private boolean hostnameVerifyDisabled;
 
+    private boolean verifyServerCertificateExpiry;
+
     private String[] versions;
 
     private String[] cipherSuites;
@@ -49,6 +51,7 @@ public class TlsConfig {
         this.trustStorePassword = builder.trustStorePassword;
         this.verifyDisabled = builder.verifyDisabled;
         this.hostnameVerifyDisabled = builder.hostnameVerifyDisabled;
+        this.verifyServerCertificateExpiry = builder.verifyServerCertificateExpiry;
         this.versions = builder.versions;
         this.cipherSuites = builder.cipherSuites;
     }
@@ -85,6 +88,10 @@ public class TlsConfig {
         return hostnameVerifyDisabled;
     }
 
+    public boolean verifyServerCertificateExpiry() {
+        return verifyServerCertificateExpiry;
+    }
+
     public String[] versions() {
         return versions;
     }
@@ -109,6 +116,8 @@ public class TlsConfig {
         private boolean verifyDisabled;
 
         private boolean hostnameVerifyDisabled;
+
+        private boolean verifyServerCertificateExpiry;
 
         private String[] versions;
 
@@ -145,6 +154,11 @@ public class TlsConfig {
 
         public Builder hostnameVerifyDisabled(boolean hostnameVerifyDisabled) {
             this.hostnameVerifyDisabled = hostnameVerifyDisabled;
+            return this;
+        }
+
+        public Builder verifyServerCertificateExpiry(boolean verifyServerCertificateExpiry) {
+            this.verifyServerCertificateExpiry = verifyServerCertificateExpiry;
             return this;
         }
 

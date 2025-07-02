@@ -23,6 +23,9 @@ import org.jetbrains.annotations.NotNull;
 import java.io.FileInputStream;
 import java.security.KeyStore;
 import java.security.SecureRandom;
+import java.security.cert.CertificateException;
+import java.security.cert.X509Certificate;
+import java.util.Date;
 import javax.net.ssl.KeyManager;
 import javax.net.ssl.KeyManagerFactory;
 import javax.net.ssl.SSLContext;
@@ -38,8 +41,11 @@ class OkHttpSslContextFactory {
             KeyManager[] keyManagers = getKeyManagers(tlsConfig.keyStorePath(), tlsConfig.keyStorePassword());
 
             // get trust manager for server certificate auth
-            TrustManager[] trustManagers = getTrustManagers(tlsConfig.trustStorePath(), tlsConfig.trustStorePassword(),
-                    tlsConfig.verifyDisabled());
+            TrustManager[] originTrustManagers = getTrustManagers(tlsConfig.trustStorePath(),
+                    tlsConfig.trustStorePassword(), tlsConfig.verifyDisabled());
+            TrustManager[] trustManagers = getDelegateTrustManagers(originTrustManagers,
+                    tlsConfig.verifyServerCertificateExpiry());
+
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(keyManagers, trustManagers, new SecureRandom());
             X509TrustManager x509TrustManager = (X509TrustManager) trustManagers[0];
@@ -49,16 +55,15 @@ class OkHttpSslContextFactory {
         }
     }
 
-    private static KeyManager[] getKeyManagers(String keyStorePath,
-                                               char[] keyStorePassword) {
+    private static KeyManager[] getKeyManagers(String keyStorePath, char[] keyStorePassword) {
         try {
             if (keyStorePath == null) {
                 return null;
             }
 
             KeyStore keyStore = loadKeyStore(keyStorePath, keyStorePassword);
-            KeyManagerFactory keyManagerFactory = KeyManagerFactory.getInstance(
-                    KeyManagerFactory.getDefaultAlgorithm());
+            KeyManagerFactory keyManagerFactory =
+                    KeyManagerFactory.getInstance(KeyManagerFactory.getDefaultAlgorithm());
             keyManagerFactory.init(keyStore, keyStorePassword);
             return keyManagerFactory.getKeyManagers();
         } catch (Exception e) {
@@ -67,8 +72,7 @@ class OkHttpSslContextFactory {
     }
 
     @NotNull
-    private static TrustManager[] getTrustManagers(String trustStorePath,
-                                                   char[] trustStorePassword,
+    private static TrustManager[] getTrustManagers(String trustStorePath, char[] trustStorePassword,
                                                    boolean disableSslVerify) {
         try {
             if (disableSslVerify) {
@@ -85,8 +89,19 @@ class OkHttpSslContextFactory {
         }
     }
 
-    private static KeyStore loadKeyStore(String keyStorePath,
-                                         char[] password) {
+    private static TrustManager[] getDelegateTrustManagers(TrustManager[] trustManagers,
+                                                           boolean verifyServerCertificateExpiry) {
+        if (!verifyServerCertificateExpiry) {
+            return trustManagers;
+        }
+        TrustManager[] delegateTrustManagers = new TrustManager[trustManagers.length];
+        for (int i = 0; i < delegateTrustManagers.length; i++) {
+            delegateTrustManagers[i] = new CheckExpiryTrustManager((X509TrustManager) trustManagers[i]);
+        }
+        return delegateTrustManagers;
+    }
+
+    private static KeyStore loadKeyStore(String keyStorePath, char[] password) {
         try (FileInputStream trustStoreFile = new FileInputStream(keyStorePath)) {
             KeyStore keyStore = KeyStore.getInstance("JKS");
             keyStore.load(trustStoreFile, password);
@@ -101,5 +116,32 @@ class OkHttpSslContextFactory {
     static class OkHttpSslContext {
         SSLSocketFactory sslSocketFactory;
         X509TrustManager x509TrustManager;
+    }
+
+    static class CheckExpiryTrustManager implements X509TrustManager {
+
+        private final X509TrustManager trustManager;
+
+        CheckExpiryTrustManager(X509TrustManager trustManager) {
+            this.trustManager = trustManager;
+        }
+
+        public void checkClientTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            this.trustManager.checkClientTrusted(chain, authType);
+        }
+
+        public void checkServerTrusted(X509Certificate[] chain, String authType) throws CertificateException {
+            this.trustManager.checkServerTrusted(chain, authType);
+            Date now = new Date();
+            for (X509Certificate x509Certificate : chain) {
+                if (now.after(x509Certificate.getNotAfter())) {
+                    throw new CertificateException("Certificate expired: " + x509Certificate.getSubjectX500Principal());
+                }
+            }
+        }
+
+        public X509Certificate[] getAcceptedIssuers() {
+            return this.trustManager.getAcceptedIssuers();
+        }
     }
 }
