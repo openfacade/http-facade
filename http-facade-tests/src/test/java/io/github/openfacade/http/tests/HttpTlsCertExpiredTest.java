@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 OpenFacade Authors
+ * Copyright 2025 OpenFacade Authors
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,6 +19,7 @@ package io.github.openfacade.http.tests;
 import io.github.openfacade.http.HttpClient;
 import io.github.openfacade.http.HttpClientConfig;
 import io.github.openfacade.http.HttpClientEngine;
+import io.github.openfacade.http.HttpClientException;
 import io.github.openfacade.http.HttpClientFactory;
 import io.github.openfacade.http.HttpMethod;
 import io.github.openfacade.http.HttpRequest;
@@ -32,45 +33,35 @@ import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.MethodSource;
+import org.junit.platform.commons.util.ExceptionUtils;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @Slf4j
-public class HttpTlsTest extends BaseTest{
+public class HttpTlsCertExpiredTest extends BaseTest {
     private static final char[] JKS_PASSWORD = "changeit".toCharArray();
 
     public static String keyJksPath() {
-        return HttpTlsTest.class.getClassLoader().getResource("jks/testkeystore.jks").getPath();
+        return HttpTlsCertExpiredTest.class.getClassLoader().getResource("jks/expiredkeystore.jks").getPath();
     }
 
     public static String trustJksPath() {
-        return HttpTlsTest.class.getClassLoader().getResource("jks/testkeystore.jks").getPath();
+        return HttpTlsCertExpiredTest.class.getClassLoader().getResource("jks/expiredkeystore.jks").getPath();
     }
 
     @Override
     protected List<HttpClientConfig> clientConfigList() {
-        TlsConfig tlsConfig = new TlsConfig.Builder()
-                .keyStore(keyJksPath(), JKS_PASSWORD)
-                .trustStore(trustJksPath(), JKS_PASSWORD)
-                .build();
-        return List.of(
-                new HttpClientConfig.Builder().engine(HttpClientEngine.Async).tlsConfig(tlsConfig).build(),
-                new HttpClientConfig.Builder().engine(HttpClientEngine.Java).tlsConfig(tlsConfig).build(),
-                new HttpClientConfig.Builder().engine(HttpClientEngine.Java8).tlsConfig(tlsConfig).build(),
-                new HttpClientConfig.Builder().engine(HttpClientEngine.OkHttp).tlsConfig(tlsConfig).build()
-        );
+        TlsConfig tlsConfig = new TlsConfig.Builder().keyStore(keyJksPath(), JKS_PASSWORD).trustStore(trustJksPath(),
+                JKS_PASSWORD).verifyServerCertificateExpiry(true).build();
+        return List.of(new HttpClientConfig.Builder().engine(HttpClientEngine.OkHttp).tlsConfig(tlsConfig).build());
     }
 
     @Override
     protected List<HttpServerConfig> serverConfigList() {
-        TlsConfig tlsConfig = new TlsConfig.Builder()
-                .keyStore(keyJksPath(), JKS_PASSWORD)
-                .trustStore(trustJksPath(), JKS_PASSWORD)
-                .build();
-        return List.of(
-                new HttpServerConfig.Builder().engine(HttpServerEngine.Vertx).tlsConfig(tlsConfig).build()
-        );
+        TlsConfig tlsConfig = new TlsConfig.Builder().keyStore(keyJksPath(), JKS_PASSWORD).trustStore(trustJksPath(),
+                JKS_PASSWORD).build();
+        return List.of(new HttpServerConfig.Builder().engine(HttpServerEngine.Vertx).tlsConfig(tlsConfig).build());
     }
 
     @ParameterizedTest
@@ -84,17 +75,18 @@ public class HttpTlsTest extends BaseTest{
             HttpResponse response = new HttpResponse(200, "Hello Tls!".getBytes());
             return CompletableFuture.completedFuture(response);
         });
-
         server.start().join();
 
         if (HttpClientEngine.OkHttp == clientConfig.engine()) {
             String url = String.format("https://localhost:%d/hello", server.listenPort());
             HttpRequest request = new HttpRequest(url, HttpMethod.GET);
-            HttpResponse response = client.sendSync(request);
+            HttpClientException exception = Assertions.assertThrows(HttpClientException.class,
+                    () -> client.sendSync(request));
 
-            Assertions.assertEquals(200, response.statusCode());
-            Assertions.assertNotNull(response.body());
-            Assertions.assertEquals("Hello Tls!", new String(response.body()));
+            List<Throwable> throwableList = ExceptionUtils.findNestedThrowables(exception);
+            Throwable rootThrowable = throwableList.get(throwableList.size() - 1);
+            String expected = "Certificate expired: CN=localhost, OU=Test, O=Company, L=City, ST=State, C=Country";
+            Assertions.assertEquals(expected, rootThrowable.getMessage());
         }
 
         client.close();
