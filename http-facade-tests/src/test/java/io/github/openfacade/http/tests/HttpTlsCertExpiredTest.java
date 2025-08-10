@@ -53,7 +53,7 @@ public class HttpTlsCertExpiredTest extends BaseTest {
     @Override
     protected List<HttpClientConfig> clientConfigList() {
         TlsConfig tlsConfig = new TlsConfig.Builder().keyStore(keyJksPath(), JKS_PASSWORD).trustStore(trustJksPath(),
-                JKS_PASSWORD).verifyServerCertificateExpiry(true).build();
+                JKS_PASSWORD).build();
         return List.of(new HttpClientConfig.Builder().engine(HttpClientEngine.OkHttp).tlsConfig(tlsConfig).build());
     }
 
