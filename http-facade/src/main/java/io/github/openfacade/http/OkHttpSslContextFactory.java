@@ -44,7 +44,7 @@ class OkHttpSslContextFactory {
             TrustManager[] originTrustManagers = getTrustManagers(tlsConfig.trustStorePath(),
                     tlsConfig.trustStorePassword(), tlsConfig.verifyDisabled());
             TrustManager[] trustManagers = getDelegateTrustManagers(originTrustManagers,
-                    tlsConfig.verifyServerCertificateExpiry());
+                    tlsConfig.serverCertificateExpiryCheckDisabled());
 
             SSLContext sslContext = SSLContext.getInstance("TLS");
             sslContext.init(keyManagers, trustManagers, new SecureRandom());
@@ -90,8 +90,8 @@ class OkHttpSslContextFactory {
     }
 
     private static TrustManager[] getDelegateTrustManagers(TrustManager[] trustManagers,
-                                                           boolean verifyServerCertificateExpiry) {
-        if (!verifyServerCertificateExpiry) {
+                                                           boolean serverCertificateExpiryCheckDisabled) {
+        if (serverCertificateExpiryCheckDisabled) {
             return trustManagers;
         }
         TrustManager[] delegateTrustManagers = new TrustManager[trustManagers.length];
