@@ -1,6 +1,10 @@
 # HTTP Facade
 
-![License](https://img.shields.io/badge/license-Apache2.0-green) ![Language](https://img.shields.io/badge/language-Java-blue.svg) [![version](https://img.shields.io/github/v/tag/openfacade/http-facade?label=release&color=blue)](https://github.com/openfacade/http-facade/releases) [![codecov](https://codecov.io/gh/openfacade/http-facade/branch/main/graph/badge.svg)](https://codecov.io/gh/openfacade/http-facade)
+![License](https://img.shields.io/badge/license-Apache2.0-green)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11002/badge)](https://www.bestpractices.dev/projects/11002)
+![Language](https://img.shields.io/badge/language-Java-blue.svg)
+[![version](https://img.shields.io/github/v/tag/openfacade/http-facade?label=release&color=blue)](https://github.com/openfacade/http-facade/releases)
+[![codecov](https://codecov.io/gh/openfacade/http-facade/branch/main/graph/badge.svg)](https://codecov.io/gh/openfacade/http-facade)
 
 English | [简体中文](README_CN.md)
 
