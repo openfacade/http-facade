@@ -21,10 +21,11 @@
     <parent>
         <groupId>io.github.openfacade</groupId>
         <artifactId>http-facade-parent</artifactId>
-        <version>0.4.1</version>
+        <version>0.5.0</version>
         <relativePath>../http-facade-parent</relativePath>
     </parent>
 
+    <name>Http Client Facade</name>
     <artifactId>http-facade</artifactId>
 
     <dependencies>
