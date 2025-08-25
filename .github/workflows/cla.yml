@@ -31,7 +31,7 @@ jobs:
           PERSONAL_ACCESS_TOKEN: ${{ secrets.ACCESS_FOR_CLA }}
         with:
           path-to-signatures: 'signatures/version1/cla.json'
-          path-to-document: 'https://github.com/openfacade/.github/blob/main/README.md'
+          path-to-document: 'https://github.com/openfacade/.github/blob/main/cla.md'
           branch: 'main'
           allowlist: dependabot,bot*,github-actions
           remote-repository-name: .github
