@@ -1,5 +1,5 @@
 # HTTP Facade
-
+![color](images/fulllogo_nobuffer.png)
 ![License](https://img.shields.io/badge/license-Apache2.0-green)
 [![OpenSSF Best Practices](https://www.bestpractices.dev/projects/11002/badge)](https://www.bestpractices.dev/projects/11002)
 ![Language](https://img.shields.io/badge/language-Java-blue.svg)

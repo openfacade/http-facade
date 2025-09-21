@@ -3,7 +3,7 @@
 
 # ide
 .idea/**
-!.idea/icon.svg
+!.idea/icon.png
 !.idea/vcs.xml
 **.iml
 
